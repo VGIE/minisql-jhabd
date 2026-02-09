@@ -6,7 +6,7 @@ namespace DbManager
 {
     public class ColumnDefinition
     {
-        public enum DataType { String, Int, Double}
+        public enum DataType {String, Int, Double}
 
         public DataType Type;
         public string Name { get; private set; }
@@ -15,7 +15,8 @@ namespace DbManager
         public ColumnDefinition(DataType type, string name)
         {
             //TODO DEADLINE 1.A: Initialize member variables
-            
+            Type = type;
+            Name = name;
         }
 
         private const string Delimiter = "->";

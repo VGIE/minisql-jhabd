@@ -35,9 +35,10 @@ namespace OurTests
 
             Assert.Equal("Ana", row.GetValue("Nombre"));
             Assert.Equal("30", row.GetValue("Edad"));
+            Assert.Null(row.GetValue(""));
         }
 
-        /*[Fact]
+        [Fact]
         public void IsTrue()
         {
             ColumnDefinition nombreCol = new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre");
@@ -49,6 +50,6 @@ namespace OurTests
 
             Assert.True(row.IsTrue(new Condition("Edad", ">", "35")));
             Assert.False(row.IsTrue(new Condition("Nombre", "=", "Walter")));
-        }*/
+        }
     }
 }
