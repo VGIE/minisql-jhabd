@@ -12,14 +12,20 @@ namespace DbManager
         public string Operator { get; private set; }
         public string LiteralValue { get; private set; }
 
+        public string lessThan = "<";
+        public string moreThan = ">";
+        public string equal = "=";
+        public string notEqual = "!=";
+        public string lessOrEqual = "<=";
+        public string moreOrEqual = ">=";
+
+
         public Condition(string column, string op, string literalValue)
         {
             //TODO DEADLINE 1A: Initialize member variables
-
             ColumnName = column;
             Operator = op;
             LiteralValue = literalValue;
-            
         }
 
 
@@ -31,37 +37,35 @@ namespace DbManager
             //"9" > "10"
             //9 < 10
             //Convert first the strings to the appropriate type and then compare (depending on the operator of the condition)
-            
-
             switch (type)
             {
                 case ColumnDefinition.DataType.String:
-                if (Operator == "<")
+                if (Operator == lessThan)
                     {
                         if (value.CompareTo(LiteralValue) < 0)
                             return true;
                     }
-                    else if (Operator == ">")
+                    else if (Operator == moreThan)
                     {
                         if (value.CompareTo(LiteralValue) > 0)
                             return true;
                     }
-                    else if (Operator == "<=")
+                    else if (Operator == lessOrEqual)
                     {
                         if (value.CompareTo(LiteralValue) <= 0)
                             return true;
                     }
-                    else if (Operator == ">=")
+                    else if (Operator == moreOrEqual)
                     {
                         if (value.CompareTo(LiteralValue) >= 0)
                             return true;
                     }
-                    else if (Operator == "=")
+                    else if (Operator == equal)
                     {
                         if (value == LiteralValue)
                             return true;
                     }
-                    else if (Operator == "!=")
+                    else if (Operator == notEqual)
                     {
                         if (value != LiteralValue)
                             return true;
@@ -69,36 +73,35 @@ namespace DbManager
                     return false;
                 
                 case ColumnDefinition.DataType.Int:
-
                 if (int.TryParse(value, out int intValue) && 
                         int.TryParse(LiteralValue, out int intLiteral))
                     {
-                        if (Operator == "<")
+                        if (Operator == lessThan)
                         {
                             if (intValue < intLiteral)
                                 return true;
                         }
-                        else if (Operator == ">")
+                        else if (Operator == moreThan)
                         {
                             if (intValue > intLiteral)
                                 return true;
                         }
-                        else if (Operator == "<=")
+                        else if (Operator == lessOrEqual)
                         {
                             if (intValue <= intLiteral)
                                 return true;
                         }
-                        else if (Operator == ">=")
+                        else if (Operator == moreOrEqual)
                         {
                             if (intValue >= intLiteral)
                                 return true;
                         }
-                        else if (Operator == "=")
+                        else if (Operator == equal)
                         {
                             if (intValue == intLiteral)
                                 return true;
                         }
-                        else if (Operator == "!=")
+                        else if (Operator == notEqual)
                         {
                             if (intValue != intLiteral)
                                 return true;
@@ -110,46 +113,41 @@ namespace DbManager
                     if (double.TryParse(value, CultureInfo.InvariantCulture, out double doubleValue) && 
                         double.TryParse(LiteralValue, CultureInfo.InvariantCulture, out double doubleLiteral))
                     {
-                        if (Operator == "<")
+                        if (Operator == lessThan)
                         {
                             if (doubleValue < doubleLiteral)
                                 return true;
                         }
-                        else if (Operator == ">")
+                        else if (Operator == moreThan)
                         {
                             if (doubleValue > doubleLiteral)
                                 return true;
                         }
-                        else if (Operator == "<=")
+                        else if (Operator == lessOrEqual)
                         {
                             if (doubleValue <= doubleLiteral)
                                 return true;
                         }
-                        else if (Operator == ">=")
+                        else if (Operator == moreOrEqual)
                         {
                             if (doubleValue >= doubleLiteral)
                                 return true;
                         }
-                        else if (Operator == "=")
+                        else if (Operator == equal)
                         {
                             if (doubleValue == doubleLiteral)
                                 return true;
                         }
-                        else if (Operator == "!=")
+                        else if (Operator == notEqual)
                         {
                             if (doubleValue != doubleLiteral)
                                 return true;
                         }
                     }
                     return false;
-
+                default:
+                    return false;
             }
-
-            
-            
-    
-                return false;
         }
     }
-    
 }
