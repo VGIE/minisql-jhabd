@@ -14,7 +14,6 @@ namespace DbManager
 
         public Table(string name, List<ColumnDefinition> columns)
         {
-            //TODO DEADLINE 1.A: Initialize member variables
             Name = name;
             ColumnDefinitions = columns;
             
@@ -22,192 +21,105 @@ namespace DbManager
 
         public Row GetRow(int i)
         {
-            //TODO DEADLINE 1.A: Return the i-th row
-
-            if (i >= 0 && i < Rows.Count)
-            {
-                return Rows[i];
-            }
-            else
-            {
-                return null;
-   
-            }    
+            return Rows[i];
             
         }
 
         public void AddRow(Row row)
         {
-            //TODO DEADLINE 1.A: Add a new row
-            if (row != null)
-            {
-                Rows.Add(row);
-            }
+            Rows.Add(row);
+            
         }
 
         public int NumRows()
         {
-            //TODO DEADLINE 1.A: Return the number of rows
-            int numero = Rows.Count;
-            return numero;
+            return Rows.Count;
             
         }
 
         public ColumnDefinition GetColumn(int i)
         {
-            //TODO DEADLINE 1.A: Return the i-th column
-            
-            if (i >= 0 && i < ColumnDefinitions.Count)
-            {
-                return ColumnDefinitions[i];
-            }
-            else
-            {
-                return null;
-   
-            }               
+            return ColumnDefinitions[i];
         }
 
         public int NumColumns()
         {
-            //TODO DEADLINE 1.A: Return the number of columns
+            return ColumnDefinitions.Count;
             
-            int numero = ColumnDefinitions.Count;
-            return numero;            
         }
         
         public ColumnDefinition ColumnByName(string column)
         {
-            //TODO DEADLINE 1.A: Return the number of columns
+            foreach (var col in ColumnDefinitions)
+                if (col.Name == column) return col;
+            return null;
             
-            if(column != null)
-            {
-                foreach (ColumnDefinition col in ColumnDefinitions)
-                {
-                    if (col.Name == column)
-                    {
-                        return col;
-                    }
-                }
-            }
-
-            return null;          
         }
         
         public int ColumnIndexByName(string columnName)
         {
-            //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            
-            if(columnName != null)
-            {
-                for (int i = 0; i < ColumnDefinitions.Count; i++)
-                {
-                     if (string.Equals(ColumnDefinitions[i].Name, columnName))
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;        
+            for (int i=0; i < ColumnDefinitions.Count; i++)
+                if (ColumnDefinitions[i].Name == columnName) return i;
+            return -1;
         }
 
-
-       public override string ToString()
+        public override string ToString()
         {
-            //TODO DEADLINE 1.A: Return the table as a string. The format is specified in the documentation
-            //Valid examples:
-            //"['Name']{'Adolfo'}{'Jacinto'}" <- one column, two rows
-            //"['Name','Age']{'Adolfo','23'}{'Jacinto','24'}" <- two columns, two rows
-            //"" <- no columns, no rows
-            //"['Name']" <- one column, no rows
-            
-            string result;
-
-            if(ColumnDefinitions == null || ColumnDefinitions.Count == 0)
-            {
-                result = "";
-                return result;
-            }
-            
-            result = "['";
-            for(int i = 0; i < ColumnDefinitions.Count; i++)
-            {
-                result += ColumnDefinitions[i].Name;
-                if(i < ColumnDefinitions.Count - 1)
-                {
-                    result += "','";
-                }
-            }
-            result += "']";
-            
-            if(Rows != null && Rows.Count > 0)
-            {
-                foreach(Row row in Rows)
-                {
-                    result += "{'";
-                    for(int i = 0; i < row.Values.Count; i++)
-                    {
-                        result += row.Values[i];
-                        if(i < row.Values.Count - 1)
-                        {
-                            result += "','";
-                        }
-                    }
-                    result += "'}";
-                }
-            }
-            
+            if (NumColumns() == 0) return "";
+            string result = "[" + string.Join(",", ColumnDefinitions.ConvertAll(c=> $"'{c.Name}'")) + "]";
+            foreach (var row in Rows)
+                result += "{" + string.Join(",", row.Values.ConvertAll(v => $"'{v}'")) + "}";
             return result;
         }
-
         public void DeleteIthRow(int row)
         {
-            //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
-
             if (row >= 0 && row < Rows.Count)
-            {
-              Rows.RemoveAt(row);
-            }
+                Rows.RemoveAt(row);
         }
 
         private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
         {
-            //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
-            
-            return null;
-            
+            var indices = new List<int>();
+            for (int i = 0; i < Rows.Count; i++)
+                if (Rows[i].IsTrue(condition)) indices.Add(i);
+            return indices;         
         }
 
         public void DeleteWhere(Condition condition)
         {
-            //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
-            
+            var indices = RowIndicesWhereConditionIsTrue(condition);
+            for (int i = indices.Count - 1; i >= 0; i--)
+                Rows.RemoveAt(indices[i]);           
         }
 
         public Table Select(List<string> columnNames, Condition condition)
         {
-            //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
-            //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            
-            return null;
-            
+            var cols = columnNames.ConvertAll(n => ColumnByName(n));
+            var result = new Table("Result", cols);
+            foreach (var row in Rows)
+            {
+                if (condition != null && !row.IsTrue(condition)) continue;
+                var values = columnNames.ConvertAll(n => row.GetValue(n));
+                result.Insert(values);  
+            }
+            return result;
         }
 
         public bool Insert(List<string> values)
         {
-            //TODO DEADLINE 1.A: Insert a new row with the values given. If the number of values is not correct, return false. True otherwise
-            
-            return false;
-            
+            if (values.Count != NumColumns()) return false;
+            Rows.Add(new Row(ColumnDefinitions, values));
+            return true;
         }
 
         public bool Update(List<SetValue> setValues, Condition condition)
         {
-            //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
-            //return false, otherwise return true
-            
-            return false;
-            
+            if (condition == null) return false;
+            var indices = RowIndicesWhereConditionIsTrue(condition);
+            foreach (int i in indices)
+                foreach (var sv in setValues)
+                    Rows[i].SetValue(sv.ColumnName, sv.Value);
+            return true;
         }
 
 
