@@ -55,7 +55,7 @@ namespace DbManager
             if(ColumnDefinition == null || ColumnDefinition.Count == 0)
             {
                 LastErrorMessage = Constants.DatabaseCreatedWithoutColumnsError;
-                return false;             
+                return false;
             }
             
             foreach(Table tabla in Tables)
@@ -77,7 +77,7 @@ namespace DbManager
         {
             //DEADLINE 1.B: Delete the table with the given name. If the table doesn't exist, return false and set LastErrorMessage
             //If everything goes ok, return true and set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+
             Table tablaEliminada = null;
 
             foreach(Table tabla in Tables)
