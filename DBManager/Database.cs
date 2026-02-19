@@ -75,7 +75,8 @@ namespace DbManager
             
             LastErrorMessage = Constants.CreateTableSuccess;
             Table nueva = new Table(tableName,ColumnDefinition);
-            return AddTable(nueva);
+            Tables.Add(nueva);
+            return true; 
             
         }
 

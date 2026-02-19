@@ -7,37 +7,46 @@ namespace OurTests
         //TODO DEADLINE 1B : Create your own tests for Database
         
         [Fact]
-        public void CrateTable()
+        public void CreateTable()
         {
-            var database = Database.CreateTestDatabase;
+            var database = Database.CreateTestDatabase();
 
+            ColumnDefinition col1 = new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre");
+            ColumnDefinition col2 = new ColumnDefinition(ColumnDefinition.DataType.Int, "Edad");
+            List<ColumnDefinition> columnasNuevas = new List<ColumnDefinition>() { col1, col2 };
+            String nombreInventado = "TablaNueva";
+
+            bool resultado = database.CreateTable(nombreInventado,columnasNuevas);
+
+            Assert.True(resultado);
+            Assert.Equal(Constants.CreateTableSuccess, database.LastErrorMessage);
         }
         
         [Fact]
         public void DropTable()
         {
-            var db = Database.CreateTestDatabase(); 
+            var database = Database.CreateTestDatabase(); 
 
-            bool resultado = db.DropTable(Table.TestTableName);
+            bool resultado = database.DropTable(Table.TestTableName);
 
             Assert.True(resultado);
-            Assert.Equal(Constants.DropTableSuccess, db.LastErrorMessage);
+            Assert.Equal(Constants.DropTableSuccess, database.LastErrorMessage);
 
-            bool resultadoSegundaVez = db.DropTable(Table.TestTableName);
+            bool resultadoSegundaVez = database.DropTable(Table.TestTableName);
             Assert.False(resultadoSegundaVez);
         }
 
         [Fact]
         public void DropTable_Failure_TableDoesNotExist()
         {
-            var db = Database.CreateTestDatabase();
+            var database = Database.CreateTestDatabase();
             string nombreInventado = "TablaQueNoExiste";
 
-            bool resultado = db.DropTable(nombreInventado);
+            bool resultado = database.DropTable(nombreInventado);
 
             Assert.False(resultado);
 
-            Assert.Equal(Constants.TableDoesNotExistError, db.LastErrorMessage);
+            Assert.Equal(Constants.TableDoesNotExistError, database.LastErrorMessage);
         }
 
         [Fact]
