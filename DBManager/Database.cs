@@ -26,6 +26,12 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
+            this.m_username = adminUsername;
+            Manager m = new Manager(adminUsername);
+            this.SecurityManager = m;
+            this.LastErrorMessage = "";
+
+
             
         }
 
