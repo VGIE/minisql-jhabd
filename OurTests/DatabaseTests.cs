@@ -93,5 +93,21 @@ namespace OurTests
             Assert.True(resultado);
             Assert.Equal(Constants.InsertSuccess, database.LastErrorMessage);
         }
+
+        [Fact]
+        public void InsertATablaInexistente()
+        {
+            var database = Database.CreateTestDatabase();
+
+            String value1 = "klk";
+            String value2 = "manin";
+            List<String> values = new List<string>{value1,value2};
+            String nombre = "tabla";
+
+            bool resultado = database.Insert(nombre, values);
+
+            Assert.False(resultado);
+            Assert.Equal(Constants.TableDoesNotExistError, database.LastErrorMessage);
+        }
     }
 }
