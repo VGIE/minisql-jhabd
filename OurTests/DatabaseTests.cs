@@ -36,7 +36,21 @@ namespace OurTests
             Assert.False(resultado);
             Assert.Equal(Constants.TableAlreadyExistsError, database.LastErrorMessage);
         }
-        
+
+        [Fact]
+        public void CreateTableSinColumnas()
+        {
+            var database = Database.CreateTestDatabase();
+
+            List<ColumnDefinition> columnasNuevas = new List<ColumnDefinition>();
+            String nombreInventado = "TablaNueva";
+
+            bool resultado = database.CreateTable(nombreInventado,columnasNuevas);
+
+            Assert.False(resultado);
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, database.LastErrorMessage);
+        }
+
         [Fact]
         public void DropTable()
         {
@@ -52,7 +66,7 @@ namespace OurTests
         }
 
         [Fact]
-        public void DropTable_Failure_TableDoesNotExist()
+        public void DropTableTablaInexistente()
         {
             var database = Database.CreateTestDatabase();
             string nombreInventado = "TablaQueNoExiste";
