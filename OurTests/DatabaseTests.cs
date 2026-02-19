@@ -21,6 +21,21 @@ namespace OurTests
             Assert.True(resultado);
             Assert.Equal(Constants.CreateTableSuccess, database.LastErrorMessage);
         }
+
+        [Fact]
+        public void CreateTableNombreExistente()
+        {
+            var database = Database.CreateTestDatabase();
+
+            ColumnDefinition col1 = new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre");
+            ColumnDefinition col2 = new ColumnDefinition(ColumnDefinition.DataType.Int, "Edad");
+            List<ColumnDefinition> columnasNuevas = new List<ColumnDefinition>() { col1, col2 };
+
+            bool resultado = database.CreateTable(Table.TestTableName,columnasNuevas);
+
+            Assert.False(resultado);
+            Assert.Equal(Constants.TableAlreadyExistsError, database.LastErrorMessage);
+        }
         
         [Fact]
         public void DropTable()
