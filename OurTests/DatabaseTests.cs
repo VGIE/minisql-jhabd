@@ -69,6 +69,7 @@ namespace OurTests
         public void DropTableTablaInexistente()
         {
             var database = Database.CreateTestDatabase();
+
             string nombreInventado = "TablaQueNoExiste";
 
             bool resultado = database.DropTable(nombreInventado);
@@ -81,7 +82,16 @@ namespace OurTests
         [Fact]
         public void Insert()
         {
+            var database = Database.CreateTestDatabase();
 
+            String value1 = "klk";
+            String value2 = "manin";
+            List<String> values = new List<string>{value1,value2};
+
+            bool resultado = database.Insert(Table.TestTableName, values);
+
+            Assert.True(resultado);
+            Assert.Equal(Constants.InsertSuccess, database.LastErrorMessage);
         }
     }
 }
