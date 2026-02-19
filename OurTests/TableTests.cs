@@ -1,19 +1,18 @@
 using DbManager;
 using Xunit;
+using System.Collections.Generic;
 
 namespace OurTests
 {
     public class TableTests
     {
-        //TODO DEADLINE 1A : Create your own tests for Table
-        
         [Fact]
         public void GetRow()
         {
             var tabla = Table.CreateTestTable();
 
             ColumnDefinition nombreCol = new ColumnDefinition(ColumnDefinition.DataType.String, Table.TestColumn1Name);
-            ColumnDefinition edadCol= new ColumnDefinition(ColumnDefinition.DataType.Int, Table.TestColumn3Name);
+            ColumnDefinition edadCol = new ColumnDefinition(ColumnDefinition.DataType.Int, Table.TestColumn3Name);
 
             List<ColumnDefinition> columna = new List<ColumnDefinition>() { nombreCol, edadCol };
 
@@ -24,7 +23,6 @@ namespace OurTests
             
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Row1, resultado.Values[0]);
-
         }
         
         [Fact]
@@ -52,7 +50,7 @@ namespace OurTests
             var tabla = Table.CreateTestTable();
 
             ColumnDefinition nombreCol = new ColumnDefinition(ColumnDefinition.DataType.String, Table.TestColumn1Name);
-            ColumnDefinition edadCol= new ColumnDefinition(ColumnDefinition.DataType.Int, Table.TestColumn3Name);
+            ColumnDefinition edadCol = new ColumnDefinition(ColumnDefinition.DataType.Int, Table.TestColumn3Name);
 
             List<ColumnDefinition> columna = new List<ColumnDefinition>() { nombreCol, edadCol };
 
@@ -93,7 +91,6 @@ namespace OurTests
             var resultado = tabla.ColumnByName(Table.TestColumn1Name);
 
             Assert.NotNull(resultado);
-
             Assert.Equal(Table.TestColumn1Name, resultado.Name);
         }
         
@@ -107,7 +104,7 @@ namespace OurTests
             Assert.Equal(0, resultado);
         }
         
-       [Fact]
+        [Fact]
         public void ToStringTest()
         {
             var tabla = Table.CreateTestTable();
@@ -129,6 +126,32 @@ namespace OurTests
             Assert.Contains(Table.TestColumn1Row1, resultado);
             Assert.Contains("30", resultado);
             Assert.StartsWith("['", resultado);
+        }
+
+        [Fact]
+        public void Insert_AddsRow()
+        {
+            var tabla = Table.CreateTestTable();
+            tabla.Insert(new List<string> { "Nuevo", "1.80", "30" });
+            Assert.Equal(4, tabla.NumRows());
+        }
+
+        [Fact]
+        public void DeleteIthRow_RemovesCorrectRow()
+        {
+            var tabla = Table.CreateTestTable();
+            tabla.DeleteIthRow(0);
+            Assert.Equal(2, tabla.NumRows());
+            Assert.Equal(Table.TestColumn1Row2, tabla.GetRow(0).GetValue(Table.TestColumn1Name));
+        }
+
+        [Fact]
+        public void Select_WithCondition_ReturnsFilteredRows()
+        {
+            var tabla = Table.CreateTestTable();
+            var condition = new Condition(Table.TestColumn1Name, "=", Table.TestColumn1Row1);
+            var result = tabla.Select(new List<string> { Table.TestColumn1Name }, condition);
+            Assert.Equal(1, result.NumRows());
         }
     }
 }
