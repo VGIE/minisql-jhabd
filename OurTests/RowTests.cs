@@ -10,11 +10,11 @@ namespace OurTests
         {
             var columns = new List<ColumnDefinition>
             {
-                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
-                new ColumnDefinition(ColumnDefinition.DataType.Int, "Edad")
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
             };
 
-            Row row = new Row(columns, new List<string> { "Ana", "30" });
+            Row row = new(columns, ["Ana", "30"]);
 
             row.SetValue("Nombre", "Walter");
             row.SetValue("Edad", "20");
@@ -28,11 +28,11 @@ namespace OurTests
         {
             var columns = new List<ColumnDefinition>
             {
-                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
-                new ColumnDefinition(ColumnDefinition.DataType.Int, "Edad")
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
             };
 
-            Row row = new Row(columns, new List<string> { "Ana", "30" });
+            Row row = new(columns, ["Ana", "30"]);
 
             Assert.Equal("Ana", row.GetValue("Nombre"));
             Assert.Equal("30", row.GetValue("Edad"));
@@ -44,15 +44,29 @@ namespace OurTests
         {
             var columns = new List<ColumnDefinition>
             {
-                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
-                new ColumnDefinition(ColumnDefinition.DataType.Int, "Edad")
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
             };
 
-            Row row = new Row(columns, new List<string> { "Ana", "40" });
+            Row row = new(columns, ["Ana", "40"]);
 
             Assert.True(row.IsTrue(new Condition("Edad", ">", "35")));
             Assert.False(row.IsTrue(new Condition("Nombre", "=", "Walter")));
             Assert.False(row.IsTrue(new Condition("", "", "")));
+        }
+
+        [Fact]
+        public void AsText()
+        {
+            var columns = new List<ColumnDefinition>
+            {
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
+            };
+
+            Row row = new(columns, ["Ana", "40"]);
+
+            Assert.Equal("Ana:40", row.AsText());
         }
     }
 }
