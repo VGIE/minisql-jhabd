@@ -67,6 +67,7 @@ namespace OurTests
             Row row = new(columns, ["Ana", "40"]);
 
             Assert.Equal("Ana:40", row.AsText());
+            Assert.Equal("", new Row(columns, []).AsText());
         }
 
         [Fact]

@@ -68,14 +68,17 @@ namespace DbManager
         public string AsText()
         {
             //TODO DEADLINE 1.C: Return the row as string with all values separated by the delimiter
-            List<string> encodedValues = [];
+            if (Values.Count == 0)
+                return "";
 
-            foreach (var value in Values)
+            var encodedValues = Encode(Values[0]);
+
+            for (int i = 1; i < Values.Count; i++)
             {
-                encodedValues.Add(Encode(value));
+                encodedValues += Delimiter + Encode(Values[i]);
             }
 
-            return string.Join(Delimiter, encodedValues);
+            return encodedValues;
         }
 
         public static Row Parse(List<ColumnDefinition> columns, string value)
