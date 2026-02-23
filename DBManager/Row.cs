@@ -56,32 +56,44 @@ namespace DbManager
         private static string Encode(string value)
         {
             //TODO DEADLINE 1.C: Encode the delimiter in value
-
-            return null;
+            return value.Replace(Delimiter, DelimiterEncoded);
         }
 
         private static string Decode(string value)
         {
             //TODO DEADLINE 1.C: Decode the value doing the opposite of Encode()
-
-            return null;
+            return value.Replace(DelimiterEncoded, Delimiter);
         }
 
         public string AsText()
         {
             //TODO DEADLINE 1.C: Return the row as string with all values separated by the delimiter
+            List<string> encodedValues = [];
 
-            return null;
+            foreach (var value in Values)
+            {
+                encodedValues.Add(Encode(value));
+            }
+
+            return string.Join(Delimiter, encodedValues);
         }
 
         public static Row Parse(List<ColumnDefinition> columns, string value)
         {
             //TODO DEADLINE 1.C: Parse a rowReturn the row as string with all values separated by the delimiter
+            List<string> values = [];
+            string[] encodedValues = value.Split(Delimiter);
 
-            return null;
+            foreach (var encodedValue in encodedValues)
+            {
+                values.Add(Decode(encodedValue));
+            }
+
+            return new Row(columns, values);
         }
     }
 }
+
 //  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 //  ⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 //  ⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
