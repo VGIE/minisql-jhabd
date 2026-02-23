@@ -68,5 +68,20 @@ namespace OurTests
 
             Assert.Equal("Ana:40", row.AsText());
         }
+
+        [Fact]
+        public void Parse()
+        {
+            var columns = new List<ColumnDefinition>
+            {
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad") 
+            };
+
+            Row row = Row.Parse(columns, "Ana:40");
+
+            Assert.Equal("Ana", row.GetValue("Nombre"));
+            Assert.Equal("40", row.GetValue("Edad"));
+        }
     }
 }
