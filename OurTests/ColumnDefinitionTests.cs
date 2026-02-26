@@ -15,5 +15,14 @@ namespace OurTests
             Assert.Equal("Nombre->String", columnaString.AsText());
             Assert.Equal("Peso->Double", columnaDouble.AsText());
         }
+
+        [Fact]
+        public void Parse()
+        {
+            ColumnDefinition columna = ColumnDefinition.Parse("Edad->Int");
+
+            Assert.Equal("Edad", columna.Name);
+            Assert.Equal(ColumnDefinition.DataType.Int, columna.Type);
+        }
     }
 }
