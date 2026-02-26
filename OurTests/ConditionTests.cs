@@ -120,6 +120,10 @@ namespace OurTests
 
             var tipo = (ColumnDefinition.DataType)999;   // Invalid DataType check
 
+            Assert.False(condition.IsTrue("", ColumnDefinition.DataType.Double)); // Check for empty value
+            Assert.False(condition.IsTrue("", ColumnDefinition.DataType.Int));
+            Assert.False(condition.IsTrue("", ColumnDefinition.DataType.String));
+
             Assert.False(condition.IsTrue("", tipo));   // Non existing column check
         }
     }
