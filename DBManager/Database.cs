@@ -1,11 +1,7 @@
 using DbManager.Parser;
 using DbManager.Security;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DbManager
 {
@@ -141,9 +137,31 @@ namespace DbManager
             //DEADLINE 1.B: Return the result of the select. If the table doesn't exist return null and set LastErrorMessage appropriately (Check Constants.cs)
             //If any of the requested columns doesn't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return the table
-            
-            return null;
-            
+            Table tableC = null;
+            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            {
+               if(table.Name == tableName)
+                {
+                    tableC = table;
+                }
+            }
+
+            if (tableC == null) // provisional check to see if the table exists, we will change it later when we have the method TableByName implemented
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return null;
+            }
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                if (tableC.ColumnByName(columns[i]) == null)
+                {
+                    LastErrorMessage = Constants.ColumnDoesNotExistError;
+                    return null;
+                }
+            }
+
+            return tableC.Select(columns, condition);
         }
 
         public bool DeleteWhere(string tableName, Condition columnCondition)

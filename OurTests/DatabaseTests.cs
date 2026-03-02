@@ -2,7 +2,7 @@ using DbManager;
 
 namespace OurTests
 {
-    public class UnitTest1
+    public class DatabaseTests
     {
         //TODO DEADLINE 1B : Create your own tests for Database
         
@@ -108,6 +108,23 @@ namespace OurTests
 
             Assert.False(resultado);
             Assert.Equal(Constants.TableDoesNotExistError, database.LastErrorMessage);
+        }
+
+        [Fact]
+        public void Select()
+        {
+            var database = Database.CreateTestDatabase();
+
+            var columns = new List<ColumnDefinition>
+            {
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
+            };
+
+            database.CreateTable("Tabla", columns);
+            Assert.Equal(columns.Count, database.Select("Tabla", ["Nombre", "Edad"], null).NumColumns());
+            Assert.Null(database.Select("TablAAAAA", ["Nombre", "Edad"], null));
+            Assert.Null(database.Select("Tabla", ["Telefono", "Direccion"], null));
         }
     }
 }
