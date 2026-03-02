@@ -102,7 +102,7 @@ namespace DbManager
             {
                 for (int i = 0; i < ColumnDefinitions.Count; i++)
                 {
-                     if (string.Equals(ColumnDefinitions[i].Name, columnName))
+                    if (string.Equals(ColumnDefinitions[i].Name, columnName))
                     {
                         return i;
                     }
@@ -112,7 +112,7 @@ namespace DbManager
         }
 
 
-       public override string ToString()
+        public override string ToString()
         {
             //TODO DEADLINE 1.A: Return the table as a string. The format is specified in the documentation
             //Valid examples:
@@ -166,21 +166,25 @@ namespace DbManager
 
             if (row >= 0 && row < Rows.Count)
             {
-              Rows.RemoveAt(row);
+            Rows.RemoveAt(row);
             }
         }
 
         private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
         {
             //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
-            
-            return null;
-            
+            var indices = new List<int>();
+            for (int i = 0; i < Rows.Count; i++)
+                if (Rows[i].IsTrue(condition)) indices.Add(i);
+            return indices;
         }
 
         public void DeleteWhere(Condition condition)
         {
             //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
+            var indices = RowIndicesWhereConditionIsTrue(condition);
+            for (int i= indices.Count - 1; i >= 0; i--)
+                Rows.RemoveAt(indices[i]);
             
         }
 
@@ -188,26 +192,36 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            
-            return null;
-            
+            var cols = columnNames.ConvertAll(n => ColumnByName(n));
+            var result = new Table("Result", cols);
+            foreach (var row in Rows)
+            {
+                if (condition != null && !row.IsTrue(condition)) continue;
+                var values = columnNames.ConvertAll(n => row.GetValue(n));
+                result.Insert(values);
+            }
+            return result;
         }
 
         public bool Insert(List<string> values)
         {
             //TODO DEADLINE 1.A: Insert a new row with the values given. If the number of values is not correct, return false. True otherwise
+            if (values.Count != NumColumns()) return false;
+            Rows.Add(new Row(ColumnDefinitions, values));
             
-            return false;
-            
+            return true;
         }
 
         public bool Update(List<SetValue> setValues, Condition condition)
         {
             //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
             //return false, otherwise return true
-            
-            return false;
-            
+            if (condition == null) return false;
+            var indices = RowIndicesWhereConditionIsTrue(condition);
+            foreach (int i in indices)
+                foreach (var sv in setValues)
+                    Rows[i].SetValue(sv.ColumnName, sv.Value);
+            return true;
         }
 
 

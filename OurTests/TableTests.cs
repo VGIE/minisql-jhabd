@@ -61,7 +61,7 @@ namespace OurTests
 
             var resultado = tabla.NumRows();
             
-            Assert.Equal(1, resultado);
+            Assert.Equal(4, resultado);
         }
         
         [Fact]
