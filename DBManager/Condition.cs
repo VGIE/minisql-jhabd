@@ -21,7 +21,7 @@ namespace DbManager
 
         public Condition(string column, string op, string literalValue)
         {
-            //TODO DEADLINE 1A: Initialize member variables
+            //TODO DEADLINE 1.A: Initialize member variables
             ColumnName = column;
             Operator = op;
             LiteralValue = literalValue;
@@ -29,7 +29,7 @@ namespace DbManager
 
         public bool IsTrue(string value, ColumnDefinition.DataType type)
         {
-            //TODO DEADLINE 1A: return true if the condition is true for this value
+            //TODO DEADLINE 1.A: return true if the condition is true for this value
             //Depending on the type of the column, the comparison should be different:
             //"ab" < "cd
             //"9" > "10"
