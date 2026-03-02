@@ -141,9 +141,9 @@ namespace DbManager
             foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
             {
                if(table.Name == tableName)
-                {
-                    tableC = table;
-                }
+               {
+                  tableC = table;
+               }
             }
 
             if (tableC == null) // provisional check to see if the table exists, we will change it later when we have the method TableByName implemented
@@ -169,9 +169,20 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            
+            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            {
+                if (table.Name == tableName)
+                {
+                    if (table.ColumnByName(columnCondition.ColumnName) == null)
+                    {
+                        LastErrorMessage = Constants.ColumnDoesNotExistError;
+                        return false;
+                    }
+                        table.DeleteWhere(columnCondition);
+                        return true;
+                }
+            }
             return false;
-            
         }
 
         public bool Update(string tableName, List<SetValue> columnNames, Condition columnCondition)
@@ -179,15 +190,25 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            
+            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            {
+                if (table.Name == tableName)
+                {
+                    foreach (var setValue in columnNames)
+                    {
+                        if (table.ColumnByName(setValue.ColumnName) == null)
+                        {
+                            LastErrorMessage = Constants.ColumnDoesNotExistError;
+                            return false;
+                        }
+                    }
+                        table.Update(columnNames, columnCondition);
+                        return true;
+                }
+            }
             return false;
-            
         }
 
-        
-        
-
-        
         public bool Save(string databaseName)
         {
             //DEADLINE 1.C: Save this database to disk with the given name
@@ -221,14 +242,10 @@ namespace DbManager
             return miniSQLQuery.Execute(this);
         }
 
-
         public bool IsUserAdmin()
         {
             return SecurityManager.IsUserAdmin();
         }
-
-
-
 
 
         //All these methods are ONLY FOR TESTING. Use them to simplify creating unit tests:
@@ -260,8 +277,3 @@ namespace DbManager
         }
     }
 }
-
-
-
-
-

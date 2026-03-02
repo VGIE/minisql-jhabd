@@ -126,5 +126,27 @@ namespace OurTests
             Assert.Null(database.Select("TablAAAAA", ["Nombre", "Edad"], null));
             Assert.Null(database.Select("Tabla", ["Telefono", "Direccion"], null));
         }
+
+        [Fact]
+        public void DeleteWhere()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.DeleteWhere("TestTable", new("Name", "=", "Rodolfo"));
+            Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], null).NumRows());
+            Assert.False(database.DeleteWhere("AAAAAAAAA", new("Name", "=", "Maider")));
+            Assert.False(database.DeleteWhere("TestTable", new("Address", "=", "Maider")));
+        }
+
+        [Fact]
+        public void Update()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.Update("TestTable", [new("Name", "Maider")], new("Name", "=", "Rodolfo"));
+            Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], new("Name", "=", "Maider")).NumRows());
+            Assert.False(database.Update("AAAAAAAAA", [new("Name", "Maider")], new("Name", "=", "Maider")));
+            Assert.False(database.Update("TestTable", [new("Address", "Maider")], new("Name", "=", "Maider")));
+        }
     }
 }
