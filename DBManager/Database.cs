@@ -179,8 +179,10 @@ namespace DbManager
                         return false;
                     }
                         table.DeleteWhere(columnCondition);
+                        LastErrorMessage = Constants.DeleteSuccess;
                         return true;
                 }
+                LastErrorMessage = Constants.TableDoesNotExistError;
             }
             return false;
         }
@@ -203,8 +205,10 @@ namespace DbManager
                         }
                     }
                         table.Update(columnNames, columnCondition);
+                        LastErrorMessage = Constants.UpdateSuccess;
                         return true;
                 }
+                LastErrorMessage = Constants.TableDoesNotExistError;
             }
             return false;
         }
