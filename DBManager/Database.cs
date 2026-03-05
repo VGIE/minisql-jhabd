@@ -1,6 +1,8 @@
 using DbManager.Parser;
 using DbManager.Security;
 using System.Collections.Generic;
+using System;
+using System.IO;
 
 
 namespace DbManager
@@ -214,9 +216,38 @@ namespace DbManager
             //DEADLINE 1.C: Save this database to disk with the given name
             //If everything goes ok, return true, false otherwise.
             //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
-            
-            return false;
-            
+            try
+                {
+                    string filePath = databaseName + ".txt";
+
+                    using (StreamWriter writer = new StreamWriter(filePath))
+                    {
+                        writer.WriteLine(Tables.Count);
+
+                        foreach (Table table in Tables)
+                        {
+                            writer.WriteLine(table.Name);
+
+                            writer.WriteLine(table.NumColumns());
+                            for (int i = 0; i < table.NumColumns(); i++)
+                            {
+                                writer.WriteLine(table.GetColumn(i).AsText());
+                            }
+
+                            writer.WriteLine(table.NumRows());
+                            for (int i = 0; i < table.NumRows(); i++)
+                            {
+                                writer.WriteLine(table.GetRow(i).AsText());
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static Database Load(string databaseName, string username, string password)
