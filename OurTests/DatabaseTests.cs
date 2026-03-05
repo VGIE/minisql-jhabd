@@ -2,7 +2,7 @@ using DbManager;
 
 namespace OurTests
 {
-    public class UnitTest1
+    public class DatabaseTests
     {
         //TODO DEADLINE 1.B : Create your own tests for Database
         [Fact]
@@ -107,6 +107,45 @@ namespace OurTests
 
             Assert.False(resultado);
             Assert.Equal(Constants.TableDoesNotExistError, database.LastErrorMessage);
+        }
+
+        [Fact]
+        public void Select()
+        {
+            var database = Database.CreateTestDatabase();
+
+            var columns = new List<ColumnDefinition>
+            {
+                new(ColumnDefinition.DataType.String, "Nombre"),
+                new(ColumnDefinition.DataType.Int, "Edad")
+            };
+
+            database.CreateTable("Tabla", columns);
+            Assert.Equal(columns.Count, database.Select("Tabla", ["Nombre", "Edad"], null).NumColumns());
+            Assert.Null(database.Select("TablAAAAA", ["Nombre", "Edad"], null));
+            Assert.Null(database.Select("Tabla", ["Telefono", "Direccion"], null));
+        }
+
+        [Fact]
+        public void DeleteWhere()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.DeleteWhere("TestTable", new("Name", "=", "Rodolfo"));
+            Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], null).NumRows());
+            Assert.False(database.DeleteWhere("AAAAAAAAA", new("Name", "=", "Maider")));
+            Assert.False(database.DeleteWhere("TestTable", new("Address", "=", "Maider")));
+        }
+
+        [Fact]
+        public void Update()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.Update("TestTable", [new("Name", "Maider")], new("Name", "=", "Rodolfo"));
+            Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], new("Name", "=", "Maider")).NumRows());
+            Assert.False(database.Update("AAAAAAAAA", [new("Name", "Maider")], new("Name", "=", "Maider")));
+            Assert.False(database.Update("TestTable", [new("Address", "Maider")], new("Name", "=", "Maider")));
         }
     }
 }
