@@ -1,7 +1,6 @@
 using DbManager.Parser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DbManager
 {
@@ -9,7 +8,7 @@ namespace DbManager
     {
         private List<ColumnDefinition> ColumnDefinitions = new List<ColumnDefinition>();
         private List<Row> Rows = new List<Row>();
-        
+
         public string Name { get; private set; } = null;
 
         public Table(string name, List<ColumnDefinition> columns)
@@ -17,7 +16,6 @@ namespace DbManager
             //TODO DEADLINE 1.A: Initialize member variables
             Name = name;
             ColumnDefinitions = columns;
-            
         }
 
         public Row GetRow(int i)
@@ -31,9 +29,7 @@ namespace DbManager
             else
             {
                 return null;
-   
-            }    
-            
+            }
         }
 
         public void AddRow(Row row)
@@ -50,13 +46,11 @@ namespace DbManager
             //TODO DEADLINE 1.A: Return the number of rows
             int numero = Rows.Count;
             return numero;
-            
         }
 
         public ColumnDefinition GetColumn(int i)
         {
             //TODO DEADLINE 1.A: Return the i-th column
-            
             if (i >= 0 && i < ColumnDefinitions.Count)
             {
                 return ColumnDefinitions[i];
@@ -64,22 +58,18 @@ namespace DbManager
             else
             {
                 return null;
-   
-            }               
+            }
         }
 
         public int NumColumns()
         {
             //TODO DEADLINE 1.A: Return the number of columns
-            
             int numero = ColumnDefinitions.Count;
-            return numero;            
+            return numero;
         }
-        
         public ColumnDefinition ColumnByName(string column)
         {
             //TODO DEADLINE 1.A: Return the number of columns
-            
             if(column != null)
             {
                 foreach (ColumnDefinition col in ColumnDefinitions)
@@ -90,14 +80,12 @@ namespace DbManager
                     }
                 }
             }
-
-            return null;          
+            return null;
         }
-        
+
         public int ColumnIndexByName(string columnName)
         {
             //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            
             if(columnName != null)
             {
                 for (int i = 0; i < ColumnDefinitions.Count; i++)
@@ -108,9 +96,8 @@ namespace DbManager
                     }
                 }
             }
-            return -1;        
+            return -1;
         }
-
 
         public override string ToString()
         {
@@ -120,7 +107,7 @@ namespace DbManager
             //"['Name','Age']{'Adolfo','23'}{'Jacinto','24'}" <- two columns, two rows
             //"" <- no columns, no rows
             //"['Name']" <- one column, no rows
-            
+
             string result;
 
             if(ColumnDefinitions == null || ColumnDefinitions.Count == 0)
@@ -128,7 +115,7 @@ namespace DbManager
                 result = "";
                 return result;
             }
-            
+
             result = "['";
             for(int i = 0; i < ColumnDefinitions.Count; i++)
             {
@@ -139,7 +126,7 @@ namespace DbManager
                 }
             }
             result += "']";
-            
+
             if(Rows != null && Rows.Count > 0)
             {
                 foreach(Row row in Rows)
@@ -156,7 +143,7 @@ namespace DbManager
                     result += "'}";
                 }
             }
-            
+
             return result;
         }
 
@@ -185,19 +172,19 @@ namespace DbManager
             var indices = RowIndicesWhereConditionIsTrue(condition);
             for (int i= indices.Count - 1; i >= 0; i--)
                 Rows.RemoveAt(indices[i]);
-            
+
         }
 
         public Table Select(List<string> columnNames, Condition condition)
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            var cols = columnNames.ConvertAll(n => ColumnByName(n));
+            var cols = columnNames.ConvertAll(ColumnByName);
             var result = new Table("Result", cols);
             foreach (var row in Rows)
             {
                 if (condition != null && !row.IsTrue(condition)) continue;
-                var values = columnNames.ConvertAll(n => row.GetValue(n));
+                var values = columnNames.ConvertAll(row.GetValue);
                 result.Insert(values);
             }
             return result;
@@ -208,7 +195,7 @@ namespace DbManager
             //TODO DEADLINE 1.A: Insert a new row with the values given. If the number of values is not correct, return false. True otherwise
             if (values.Count != NumColumns()) return false;
             Rows.Add(new Row(ColumnDefinitions, values));
-            
+
             return true;
         }
 
@@ -223,7 +210,6 @@ namespace DbManager
                     Rows[i].SetValue(sv.ColumnName, sv.Value);
             return true;
         }
-
 
 
         //Only for testing purposes
