@@ -166,5 +166,27 @@ namespace OurTests
                 File.Delete(ruta);
             }
         }
+                [Fact]
+        public void Load()
+        {
+            string nombre = "Test1";
+            string ruta = "Test1.txt";
+            var db = Database.CreateTestDatabase(); 
+
+            bool resultado = db.Save(nombre);
+
+            Database dbCargada = Database.Load(nombre, Database.AdminUsername, Database.AdminPassword);
+
+            Assert.NotNull(dbCargada); 
+
+            bool tablaborrada = dbCargada.DropTable(Table.TestTableName);
+            Assert.True(tablaborrada);
+
+            //Siempre hacer esto para comprobar ficheros, así no se guardan
+            if (File.Exists(ruta))
+            {
+                File.Delete(ruta);
+            }
+        }
     }
 }
