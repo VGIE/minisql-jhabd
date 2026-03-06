@@ -135,6 +135,7 @@ namespace OurTests
             Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], null).NumRows());
             Assert.False(database.DeleteWhere("AAAAAAAAA", new("Name", "=", "Maider")));
             Assert.False(database.DeleteWhere("TestTable", new("Address", "=", "Maider")));
+            Assert.False(database.DeleteWhere("TestTable", null));
         }
 
         [Fact]
@@ -147,6 +148,9 @@ namespace OurTests
             Assert.False(database.Update("AAAAAAAAA", [new("Name", "Maider")], new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [new("Address", "Maider")], new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [new("Name", "Maider")], new("Address", "=", "Maider")));
+            Assert.False(database.Update("TestTable", [new("Name", "Maider")], null));
+            Assert.False(database.Update("TestTable", null, new("Name", "=", "Maider")));
+            Assert.False(database.Update("TestTable", [], new("Name", "=", "Maider")));
         }
 
         [Fact]

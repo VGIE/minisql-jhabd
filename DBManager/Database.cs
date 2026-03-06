@@ -171,6 +171,12 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
+            if (columnCondition == null)
+            {
+                LastErrorMessage = Constants.SyntaxError;
+                return false;
+            }
+
             foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
             {
                 if (table.Name == tableName)
@@ -194,6 +200,12 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
+            if (columnCondition == null || columnNames == null || columnNames.Count == 0)
+            {
+                LastErrorMessage = Constants.SyntaxError;
+                return false;
+            }
+
             foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
             {
                 if (table.Name == tableName)
