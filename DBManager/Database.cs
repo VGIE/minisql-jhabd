@@ -293,7 +293,7 @@ namespace DbManager
                             }
 
                             db.Tables.Add(newTable);
-                        }-
+                        }
                     }
 
                     return db; 
