@@ -256,8 +256,52 @@ namespace DbManager
             //If everything goes ok, return the loaded database (a new instance), null otherwise.
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
-            
-            return null;
+            try
+                {
+                    string filePath = databaseName + ".txt";
+
+                    if (!File.Exists(filePath))
+                    {
+                        return null;
+                    }
+
+                    Database db = new Database();
+
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        int numberOfTables = int.Parse(reader.ReadLine());
+
+                        for (int t = 0; t < numberOfTables; t++)
+                        {
+                            string tableName = reader.ReadLine();
+
+                            int numColumns = int.Parse(reader.ReadLine());
+                            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+                            for (int c = 0; c < numColumns; c++)
+                            {
+                                string columnText = reader.ReadLine();
+                                columns.Add(ColumnDefinition.Parse(columnText));
+                            }
+
+                            Table newTable = new Table(tableName, columns);
+
+                            int numRows = int.Parse(reader.ReadLine());
+                            for (int r = 0; r < numRows; r++)
+                            {
+                                string rowText = reader.ReadLine();
+                                newTable.AddRow(Row.Parse(columns, rowText));
+                            }
+
+                            db.Tables.Add(newTable);
+                        }-
+                    }
+
+                    return db; 
+                }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public string ExecuteMiniSQLQuery(string query)
