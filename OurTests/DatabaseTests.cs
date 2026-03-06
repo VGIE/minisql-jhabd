@@ -147,6 +147,7 @@ namespace OurTests
             Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], new("Name", "=", "Maider")).NumRows());
             Assert.False(database.Update("AAAAAAAAA", [new("Name", "Maider")], new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [new("Address", "Maider")], new("Name", "=", "Maider")));
+            Assert.False(database.Update("TestTable", [new("Name", "Maider")], new("Address", "=", "Maider")));
         }
     }
 }

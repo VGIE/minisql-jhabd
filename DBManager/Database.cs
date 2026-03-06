@@ -182,8 +182,8 @@ namespace DbManager
                         LastErrorMessage = Constants.DeleteSuccess;
                         return true;
                 }
-                LastErrorMessage = Constants.TableDoesNotExistError;
             }
+            LastErrorMessage = Constants.TableDoesNotExistError;
             return false;
         }
 
@@ -196,6 +196,12 @@ namespace DbManager
             {
                 if (table.Name == tableName)
                 {
+                    if (table.ColumnByName(columnCondition.ColumnName) == null)
+                    {
+                        LastErrorMessage = Constants.ColumnDoesNotExistError;
+                        return false;
+                    }
+
                     foreach (var setValue in columnNames)
                     {
                         if (table.ColumnByName(setValue.ColumnName) == null)
@@ -204,12 +210,13 @@ namespace DbManager
                             return false;
                         }
                     }
-                        table.Update(columnNames, columnCondition);
-                        LastErrorMessage = Constants.UpdateSuccess;
-                        return true;
+
+                    table.Update(columnNames, columnCondition);
+                    LastErrorMessage = Constants.UpdateSuccess;
+                    return true;
                 }
-                LastErrorMessage = Constants.TableDoesNotExistError;
             }
+            LastErrorMessage = Constants.TableDoesNotExistError;
             return false;
         }
 
