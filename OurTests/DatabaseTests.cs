@@ -147,5 +147,46 @@ namespace OurTests
             Assert.False(database.Update("AAAAAAAAA", [new("Name", "Maider")], new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [new("Address", "Maider")], new("Name", "=", "Maider")));
         }
+
+        [Fact]
+        public void Save()
+        {
+            string nombre = "Test";
+            string ruta = "Test.txt";
+            var db = Database.CreateTestDatabase(); 
+
+            bool resultado = db.Save(nombre);
+
+            Assert.True(resultado);
+            Assert.True(File.Exists(ruta));
+
+            //Siempre hacer esto para comprobar ficheros, así no se guardan
+            if (File.Exists(ruta))
+            {
+                File.Delete(ruta);
+            }
+        }
+                [Fact]
+        public void Load()
+        {
+            string nombre = "Test1";
+            string ruta = "Test1.txt";
+            var db = Database.CreateTestDatabase(); 
+
+            bool resultado = db.Save(nombre);
+
+            Database dbCargada = Database.Load(nombre, Database.AdminUsername, Database.AdminPassword);
+
+            Assert.NotNull(dbCargada); 
+
+            bool tablaborrada = dbCargada.DropTable(Table.TestTableName);
+            Assert.True(tablaborrada);
+
+            //Siempre hacer esto para comprobar ficheros, así no se guardan
+            if (File.Exists(ruta))
+            {
+                File.Delete(ruta);
+            }
+        }
     }
 }
