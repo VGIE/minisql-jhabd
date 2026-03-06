@@ -21,7 +21,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
             foreach(var column in ColumnDefinitions)
-                if (column.Name == columnName)
+                if (column.Name == columnName && ColumnDefinitions.IndexOf(column) < Values.Count)
                     Values[ColumnDefinitions.IndexOf(column)] = value;
         }
 
@@ -29,7 +29,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
             foreach(var column in ColumnDefinitions)
-                if (column.Name == columnName)
+                if (column.Name == columnName && ColumnDefinitions.IndexOf(column) < Values.Count)
                     return Values[ColumnDefinitions.IndexOf(column)];
 
             return null;
