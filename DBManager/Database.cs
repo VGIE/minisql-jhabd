@@ -89,7 +89,7 @@ namespace DbManager
             {
                 if(tabla.Name==tableName)
                 {
-                  tablaEliminada = tabla;
+                    tablaEliminada = tabla;
                 }
             }
 
@@ -145,6 +145,7 @@ namespace DbManager
                if(table.Name == tableName)
                {
                   tableC = table;
+                  break;
                }
             }
 
@@ -171,28 +172,37 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
+            Table tableC = null;
+            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            {
+                if(table.Name == tableName)
+                {
+                    tableC = table;
+                    break;
+                }
+            }
+
+            if (tableC == null) // provisional check to see if the table exists, we will change it later when we have the method TableByName implemented
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+
             if (columnCondition == null)
             {
                 LastErrorMessage = Constants.SyntaxError;
                 return false;
             }
 
-            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            if (tableC.ColumnByName(columnCondition.ColumnName) == null)
             {
-                if (table.Name == tableName)
-                {
-                    if (table.ColumnByName(columnCondition.ColumnName) == null)
-                    {
-                        LastErrorMessage = Constants.ColumnDoesNotExistError;
-                        return false;
-                    }
-                        table.DeleteWhere(columnCondition);
-                        LastErrorMessage = Constants.DeleteSuccess;
-                        return true;
-                }
+                LastErrorMessage = Constants.ColumnDoesNotExistError;
+                return false;
             }
-            LastErrorMessage = Constants.TableDoesNotExistError;
-            return false;
+
+            tableC.DeleteWhere(columnCondition);
+            LastErrorMessage = Constants.DeleteSuccess;
+            return true;
         }
 
         public bool Update(string tableName, List<SetValue> columnNames, Condition columnCondition)
@@ -206,32 +216,40 @@ namespace DbManager
                 return false;
             }
 
+            Table tableC = null;
             foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
             {
                 if (table.Name == tableName)
                 {
-                    if (table.ColumnByName(columnCondition.ColumnName) == null)
-                    {
-                        LastErrorMessage = Constants.ColumnDoesNotExistError;
-                        return false;
-                    }
-
-                    foreach (var setValue in columnNames)
-                    {
-                        if (table.ColumnByName(setValue.ColumnName) == null)
-                        {
-                            LastErrorMessage = Constants.ColumnDoesNotExistError;
-                            return false;
-                        }
-                    }
-
-                    table.Update(columnNames, columnCondition);
-                    LastErrorMessage = Constants.UpdateSuccess;
-                    return true;
+                    tableC = table;
+                    break;
                 }
             }
-            LastErrorMessage = Constants.TableDoesNotExistError;
-            return false;
+
+            if (tableC == null) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+
+            if (tableC.ColumnByName(columnCondition.ColumnName) == null)
+            {
+                LastErrorMessage = Constants.ColumnDoesNotExistError;
+                return false;
+            }
+
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                if (tableC.ColumnByName(columnNames[i].ColumnName) == null)
+                {
+                    LastErrorMessage = Constants.ColumnDoesNotExistError;
+                    return false;
+                }
+            }
+
+            tableC.Update(columnNames, columnCondition);
+            LastErrorMessage = Constants.UpdateSuccess;
+            return true;
         }
 
         public bool Save(string databaseName)
