@@ -49,8 +49,16 @@ namespace DbManager
         public Table TableByName(string tableName)
         {
             //DEADLINE 1.B: Find and return the table with the given name
+            Table t = null;
+            foreach (Table table in Tables)
+            {
+                if (table.Name == tableName)
+                {
+                    t=table;
+                }
+            }
             
-            return null;
+            return t;
             
         }
 
