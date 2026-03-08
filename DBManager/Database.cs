@@ -36,6 +36,11 @@ namespace DbManager
         public bool AddTable(Table table)
         {
             //DEADLINE 1.B: Add a new table to the database
+            if(table != null)
+            {
+                Tables.Add(table);
+                return true;
+            }
             
             return false;
             
