@@ -130,5 +130,31 @@ namespace OurTests
             Assert.Contains("30", resultado);
             Assert.StartsWith("['", resultado);
         }
+
+        [Fact]
+        public void TableSelectWithoutCondition()
+        {
+            Table table = Table.CreateTestTable(); 
+            
+            List<string> columnasSeleccionadas = new List<string> 
+            { 
+                Table.TestColumn1Name, 
+                Table.TestColumn3Name 
+            };
+
+            Table resultTable = table.Select(columnasSeleccionadas, null);
+
+            Assert.NotNull(resultTable);
+            Assert.Equal("Result", resultTable.Name);
+
+            Assert.Equal(2, resultTable.NumColumns());
+            Assert.Equal(3, resultTable.NumRows());
+
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name); 
+            Assert.Equal(Table.TestColumn3Name, resultTable.GetColumn(1).Name); 
+
+            Assert.Equal(Table.TestColumn1Row1, resultTable.GetRow(0).Values[0]); 
+            Assert.Equal(Table.TestColumn3Row1, resultTable.GetRow(0).Values[1]); 
+        }
     }
 }
