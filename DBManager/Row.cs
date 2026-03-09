@@ -20,17 +20,31 @@ namespace DbManager
         public void SetValue(string columnName, string value)
         {
             //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
-            foreach(var column in ColumnDefinitions)
-                if (column.Name == columnName && ColumnDefinitions.IndexOf(column) < Values.Count)
-                    Values[ColumnDefinitions.IndexOf(column)] = value;
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == columnName)
+                {
+                    while (Values.Count <= i)
+                        Values.Add(null);
+
+                    Values[i] = value;
+                    return;
+                }
+            }
         }
 
         public string GetValue(string columnName)
         {
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
-            foreach(var column in ColumnDefinitions)
-                if (column.Name == columnName && ColumnDefinitions.IndexOf(column) < Values.Count)
-                    return Values[ColumnDefinitions.IndexOf(column)];
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == columnName)
+                {
+                    if (i < Values.Count)
+                        return Values[i];
+                    return null;
+                }
+            }
 
             return null;
         }

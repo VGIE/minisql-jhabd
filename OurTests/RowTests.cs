@@ -26,6 +26,12 @@ namespace OurTests
 
             Assert.Equal("Walter", _row.GetValue("Nombre"));
             Assert.Equal("30", _row.GetValue("Edad"));
+
+            _row.Values.RemoveAt(1);
+
+            _row.SetValue("Edad", "50");
+
+            Assert.Equal("50", _row.GetValue("Edad"));
         }
 
         [Fact]
@@ -34,6 +40,9 @@ namespace OurTests
             Assert.Equal("Ana", _row.GetValue("Nombre"));
             Assert.Equal("40", _row.GetValue("Edad"));
             Assert.Null(_row.GetValue(""));
+
+            Row row = new(_columns, ["Ana"]);
+            Assert.Null(row.GetValue("Edad"));
         }
 
         [Fact]
