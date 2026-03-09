@@ -30,7 +30,6 @@ namespace DbManager
             this.LastErrorMessage = "";
 
 
-            
         }
 
         public bool AddTable(Table table)
@@ -41,9 +40,8 @@ namespace DbManager
                 Tables.Add(table);
                 return true;
             }
-            
+
             return false;
-            
         }
 
         public Table TableByName(string tableName)
@@ -57,9 +55,8 @@ namespace DbManager
                     t=table;
                 }
             }
-            
+
             return t;
-            
         }
 
         public bool CreateTable(string tableName, List<ColumnDefinition> ColumnDefinition)
@@ -207,7 +204,7 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            if (columnCondition == null || columnNames == null || columnNames.Count == 0)
+            if (columnNames == null || columnNames.Count == 0)
             {
                 LastErrorMessage = Constants.SyntaxError;
                 return false;
@@ -221,7 +218,7 @@ namespace DbManager
                 return false;
             }
 
-            if (tableC.ColumnByName(columnCondition.ColumnName) == null)
+            if (columnCondition != null && tableC.ColumnByName(columnCondition.ColumnName) == null)
             {
                 LastErrorMessage = Constants.ColumnDoesNotExistError;
                 return false;
@@ -236,9 +233,11 @@ namespace DbManager
                 }
             }
 
-            tableC.Update(columnNames, columnCondition);
+            var success = tableC.Update(columnNames, columnCondition);
+
             LastErrorMessage = Constants.UpdateSuccess;
-            return true;
+
+            return success;
         }
 
         public bool Save(string databaseName)
