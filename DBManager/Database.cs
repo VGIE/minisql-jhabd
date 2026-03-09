@@ -152,17 +152,9 @@ namespace DbManager
             //DEADLINE 1.B: Return the result of the select. If the table doesn't exist return null and set LastErrorMessage appropriately (Check Constants.cs)
             //If any of the requested columns doesn't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return the table
-            Table tableC = null;
-            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
-            {
-               if(table.Name == tableName)
-               {
-                  tableC = table;
-                  break;
-               }
-            }
+            Table tableC = TableByName(tableName);
 
-            if (tableC == null) // provisional check to see if the table exists, we will change it later when we have the method TableByName implemented
+            if (tableC == null)
             {
                 LastErrorMessage = Constants.TableDoesNotExistError;
                 return null;
@@ -185,17 +177,9 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            Table tableC = null;
-            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
-            {
-                if(table.Name == tableName)
-                {
-                    tableC = table;
-                    break;
-                }
-            }
+            Table tableC = TableByName(tableName);
 
-            if (tableC == null) // provisional check to see if the table exists, we will change it later when we have the method TableByName implemented
+            if (tableC == null)
             {
                 LastErrorMessage = Constants.TableDoesNotExistError;
                 return false;
@@ -229,17 +213,9 @@ namespace DbManager
                 return false;
             }
 
-            Table tableC = null;
-            foreach (Table table in Tables) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
-            {
-                if (table.Name == tableName)
-                {
-                    tableC = table;
-                    break;
-                }
-            }
+            Table tableC = TableByName(tableName);
 
-            if (tableC == null) // provisional loop to find the table, we will change it later when we have the method TableByName implemented
+            if (tableC == null)
             {
                 LastErrorMessage = Constants.TableDoesNotExistError;
                 return false;
