@@ -138,9 +138,19 @@ namespace DbManager
             }
             else
             {
-                LastErrorMessage = Constants.InsertSuccess;
-                tablaEncontrada.Insert(values);
-                return true;
+                bool insercionCorrecta = tablaEncontrada.Insert(values);
+
+                if (insercionCorrecta == true)
+                {
+                    LastErrorMessage = Constants.InsertSuccess;
+                    return true;
+                }
+
+                else
+                {
+                    LastErrorMessage = Constants.ColumnCountsDontMatch;
+                    return false;
+                }
             }
         }
 

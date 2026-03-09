@@ -84,13 +84,34 @@ namespace OurTests
             var database = Database.CreateTestDatabase();
 
             String value1 = "klk";
-            String value2 = "manin";
-            List<String> values = new List<string>{value1,value2};
+            String value2 = "4.20";
+            String value3 = "67";
+
+            List<String> values = new List<string>{value1,value2,value3};
 
             bool resultado = database.Insert(Table.TestTableName, values);
 
             Assert.True(resultado);
             Assert.Equal(Constants.InsertSuccess, database.LastErrorMessage);
+        }
+
+        [Fact]
+        public void InsertErrors()
+        {
+            var db = Database.CreateTestDatabase(); 
+
+            List<string> valido = new List<string> { "klk", "4.20", "67" };
+            bool errorTabla = db.Insert("TablaInventada", valido);
+
+            Assert.False(errorTabla);
+            Assert.Equal(Constants.TableDoesNotExistError, db.LastErrorMessage);
+
+
+            List<string> incompleto = new List<string> { "klk" };
+            bool errorValores = db.Insert(Table.TestTableName, incompleto);
+
+            Assert.False(errorValores);
+            Assert.Equal(Constants.ColumnCountsDontMatch, db.LastErrorMessage); 
         }
 
         [Fact]
