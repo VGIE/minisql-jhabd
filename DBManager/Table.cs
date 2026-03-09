@@ -179,14 +179,45 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            var cols = columnNames.ConvertAll(ColumnByName);
-            var result = new Table("Result", cols);
-            foreach (var row in Rows)
+             if (columnNames == null || columnNames.Count == 0 || (columnNames.Count == 1 && columnNames[0] == "*"))
             {
-                if (condition != null && !row.IsTrue(condition)) continue;
-                var values = columnNames.ConvertAll(row.GetValue);
-                result.Insert(values);
+                columnNames = new List<string>();
+                foreach (ColumnDefinition col in ColumnDefinitions)
+                {
+                    columnNames.Add(col.Name);
+                }
             }
+
+            List<ColumnDefinition> columnas = new List<ColumnDefinition>();
+            foreach (string name in columnNames)
+            {
+                ColumnDefinition colEncontrada = ColumnByName(name);
+                if (colEncontrada != null)
+                {
+                    columnas.Add(colEncontrada);
+                }
+            }
+
+            Table result = new Table("Result", columnas);
+
+            foreach (Row row in Rows)
+            {
+                if (condition == null || row.IsTrue(condition))
+                {
+                    List<string> values = new List<string>();
+
+                    foreach (string name in columnNames)
+                    {
+                        int index = ColumnIndexByName(name);
+                        if (index != -1)
+                        {
+                            values.Add(row.Values[index]);
+                        }
+                    }
+                    result.Insert(values);
+                }
+            }
+
             return result;
         }
 
