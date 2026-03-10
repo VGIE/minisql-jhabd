@@ -161,6 +161,14 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
             var indices = new List<int>();
+ 
+            if (condition == null)
+            {
+                for (int i = 0; i < Rows.Count; i++)
+                    indices.Add(i);
+                return indices;
+            }
+
             for (int i = 0; i < Rows.Count; i++)
                 if (Rows[i].IsTrue(condition)) indices.Add(i);
             return indices;
