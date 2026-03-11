@@ -48,9 +48,12 @@ namespace OurTests
         [Fact]
         public void IsTrue()
         {
+            Row row = new(_columns, ["Ana"]);
+
             Assert.True(_row.IsTrue(new Condition("Edad", ">", "35")));
             Assert.False(_row.IsTrue(new Condition("Nombre", "=", "Walter")));
             Assert.False(_row.IsTrue(new Condition("", "", "")));
+            Assert.False(row.IsTrue(new Condition("Edad", ">", "30")));
         }
 
         [Fact]
