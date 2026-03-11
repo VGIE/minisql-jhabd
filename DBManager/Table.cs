@@ -214,9 +214,9 @@ namespace DbManager
                 {
                     List<string> values = new List<string>();
 
-                    foreach (string name in columnNames)
+                    foreach (var col in columnas)
                     {
-                        values.Add(row.GetValue(name));
+                        values.Add(row.GetValue(col.Name));
                     }
                     result.Insert(values);
                 }
