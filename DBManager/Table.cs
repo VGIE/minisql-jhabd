@@ -216,11 +216,7 @@ namespace DbManager
 
                     foreach (string name in columnNames)
                     {
-                        int index = ColumnIndexByName(name);
-                        if (index != -1)
-                        {
-                            values.Add(row.Values[index]);
-                        }
+                        values.Add(row.GetValue(name));
                     }
                     result.Insert(values);
                 }
