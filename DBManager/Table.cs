@@ -67,6 +67,7 @@ namespace DbManager
             int numero = ColumnDefinitions.Count;
             return numero;
         }
+
         public ColumnDefinition ColumnByName(string column)
         {
             //TODO DEADLINE 1.A: Return the number of columns

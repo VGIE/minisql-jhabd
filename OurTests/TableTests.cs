@@ -1,12 +1,11 @@
 using DbManager;
-using Xunit;
 
 namespace OurTests
 {
     public class TableTests
     {
         //TODO DEADLINE 1A : Create your own tests for Table
-        
+
         [Fact]
         public void GetRow()
         {
@@ -21,31 +20,31 @@ namespace OurTests
             tabla.AddRow(row);
 
             var resultado = tabla.GetRow(0);
-            
+
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Row1, resultado.Values[0]);
 
         }
-        
+
         [Fact]
         public void AddRow()
         {
             var tabla = Table.CreateTestTable();
             int rowsAntes = tabla.NumRows();
-            
+
             ColumnDefinition nombreCol = new ColumnDefinition(ColumnDefinition.DataType.String, Table.TestColumn1Name);
             ColumnDefinition alturaCol = new ColumnDefinition(ColumnDefinition.DataType.String, Table.TestColumn2Name);
             ColumnDefinition edadCol = new ColumnDefinition(ColumnDefinition.DataType.Int, Table.TestColumn3Name);
             List<ColumnDefinition> columnas = new List<ColumnDefinition>() { nombreCol, alturaCol, edadCol };
-            
+
             var row = new Row(columnas, new List<string> { "Juan", "1.80", "30" });
-            
+
             tabla.AddRow(row);
-            
+
             Assert.Equal(rowsAntes + 1, tabla.NumRows());
             Assert.Equal(row, tabla.GetRow(tabla.NumRows() - 1));
         }
-        
+
         [Fact]
         public void NumRows()
         {
@@ -60,31 +59,31 @@ namespace OurTests
             tabla.AddRow(row);
 
             var resultado = tabla.NumRows();
-            
+
             Assert.Equal(4, resultado);
         }
-        
+
         [Fact]
         public void GetColumn()
         {
             var tabla = Table.CreateTestTable();
 
             var resultado = tabla.GetColumn(0);
-            
+
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Name, resultado.Name);
         }
-        
+
         [Fact]
         public void NumColumns()
         {
             var tabla = Table.CreateTestTable();
 
             var resultado = tabla.NumColumns();
-            
+
             Assert.Equal(3, resultado);
         }
-        
+
         [Fact]
         public void ColumnByName()
         {
@@ -96,7 +95,7 @@ namespace OurTests
 
             Assert.Equal(Table.TestColumn1Name, resultado.Name);
         }
-        
+
         [Fact]
         public void ColumnIndexByName()
         {
@@ -106,7 +105,7 @@ namespace OurTests
 
             Assert.Equal(0, resultado);
         }
-        
+
        [Fact]
         public void ToStringTest()
         {
@@ -134,12 +133,12 @@ namespace OurTests
         [Fact]
         public void TableSelectWithoutCondition()
         {
-            Table table = Table.CreateTestTable(); 
-            
-            List<string> columnasSeleccionadas = new List<string> 
-            { 
-                Table.TestColumn1Name, 
-                Table.TestColumn3Name 
+            Table table = Table.CreateTestTable();
+
+            List<string> columnasSeleccionadas = new List<string>
+            {
+                Table.TestColumn1Name,
+                Table.TestColumn3Name
             };
 
             Table resultTable = table.Select(columnasSeleccionadas, null);
@@ -150,11 +149,11 @@ namespace OurTests
             Assert.Equal(2, resultTable.NumColumns());
             Assert.Equal(3, resultTable.NumRows());
 
-            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name); 
-            Assert.Equal(Table.TestColumn3Name, resultTable.GetColumn(1).Name); 
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+            Assert.Equal(Table.TestColumn3Name, resultTable.GetColumn(1).Name);
 
-            Assert.Equal(Table.TestColumn1Row1, resultTable.GetRow(0).Values[0]); 
-            Assert.Equal(Table.TestColumn3Row1, resultTable.GetRow(0).Values[1]); 
+            Assert.Equal(Table.TestColumn1Row1, resultTable.GetRow(0).Values[0]);
+            Assert.Equal(Table.TestColumn3Row1, resultTable.GetRow(0).Values[1]);
         }
     }
 }

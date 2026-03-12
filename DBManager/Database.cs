@@ -65,13 +65,13 @@ namespace DbManager
             //return false and set LastErrorMessage with the appropriate error (Check Constants.cs)
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+
             if(ColumnDefinition == null || ColumnDefinition.Count == 0)
             {
                 LastErrorMessage = Constants.DatabaseCreatedWithoutColumnsError;
                 return false;
             }
-            
+
             foreach(Table tabla in Tables)
             {
                 if(tabla.Name==tableName)
@@ -80,12 +80,12 @@ namespace DbManager
                     return false;
                 }
             }
-            
+
             LastErrorMessage = Constants.CreateTableSuccess;
             Table nueva = new Table(tableName,ColumnDefinition);
             Tables.Add(nueva);
-            return true; 
-            
+            return true;
+
         }
 
         public bool DropTable(string tableName)
@@ -120,7 +120,7 @@ namespace DbManager
         {
             //DEADLINE 1.B: Insert a new row to the table. If it doesn't exist return false and set LastErrorMessage appropriately
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+
             Table tablaEncontrada = null;
 
             foreach(Table tabla in Tables)

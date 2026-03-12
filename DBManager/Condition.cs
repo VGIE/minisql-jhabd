@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using DbManager;
 
 namespace DbManager
 {
@@ -71,7 +67,7 @@ namespace DbManager
                     return false;
 
                 case ColumnDefinition.DataType.Int:
-                if (int.TryParse(value, out int intValue) && 
+                if (int.TryParse(value, out int intValue) &&
                         int.TryParse(LiteralValue, out int intLiteral))
                     {
                         if (Operator == LessThan)
@@ -108,7 +104,7 @@ namespace DbManager
                     return false;
 
                 case ColumnDefinition.DataType.Double:
-                    if (double.TryParse(value, CultureInfo.InvariantCulture, out double doubleValue) && 
+                    if (double.TryParse(value, CultureInfo.InvariantCulture, out double doubleValue) &&
                         double.TryParse(LiteralValue, CultureInfo.InvariantCulture, out double doubleLiteral))
                     {
                         if (Operator == LessThan)

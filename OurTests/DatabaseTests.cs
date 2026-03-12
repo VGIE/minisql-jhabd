@@ -111,7 +111,7 @@ namespace OurTests
             bool errorValores = db.Insert(Table.TestTableName, incompleto);
 
             Assert.False(errorValores);
-            Assert.Equal(Constants.ColumnCountsDontMatch, db.LastErrorMessage); 
+            Assert.Equal(Constants.ColumnCountsDontMatch, db.LastErrorMessage);
         }
 
         [Fact]
@@ -192,18 +192,19 @@ namespace OurTests
                 File.Delete(ruta);
             }
         }
-                [Fact]
+
+        [Fact]
         public void Load()
         {
             string nombre = "Test1";
             string ruta = "Test1.txt";
-            var db = Database.CreateTestDatabase(); 
+            var db = Database.CreateTestDatabase();
 
             bool resultado = db.Save(nombre);
 
             Database dbCargada = Database.Load(nombre, Database.AdminUsername, Database.AdminPassword);
 
-            Assert.NotNull(dbCargada); 
+            Assert.NotNull(dbCargada);
 
             bool tablaborrada = dbCargada.DropTable(Table.TestTableName);
             Assert.True(tablaborrada);
