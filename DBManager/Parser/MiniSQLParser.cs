@@ -10,33 +10,33 @@ namespace DbManager
         {
             //TODO DEADLINE 2
             const string selectPattern = null;
-            
+
             const string insertPattern = null;
-            
+
             const string dropTablePattern = null;
-            
+
             //Note: The parsing of CREATE TABLE should accept empty columns "()"
             //And then, an execution error should be given if a CreateTable without columns is executed
             const string createTablePattern = null;
-            
+
             const string updateTablePattern = null;
-            
+
             const string deletePattern = null;
-            
+
 
             //TODO DEADLINE 4
             const string createSecurityProfilePattern = null;
-            
+
             const string dropSecurityProfilePattern = null;
-            
+
             const string grantPattern = null;
-            
+
             const string revokePattern = null;
-            
+
             const string addUserPattern = null;
-            
+
             const string deleteUserPattern = null;
-            
+
 
             //TODO DEADLINE 2
             //Parse query using the regular expressions above one by one. If there is a match, create an instance of the query with the parsed parameters
@@ -46,9 +46,8 @@ namespace DbManager
 
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
-            
+
             return null;
-           
         }
 
         static List<string> CommaSeparatedNames(string text)
@@ -61,6 +60,5 @@ namespace DbManager
             }
             return commaSeparator;
         }
-        
     }
 }
