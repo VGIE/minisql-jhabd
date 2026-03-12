@@ -23,7 +23,7 @@ namespace DbManager
         public string Execute(Database database)
         {
             //TODO DEADLINE 3: Run the query and return the table as a string (or the last error in the database)
-            Table result == database.Select(Table, Columns, Where);
+            Table result = database.Select(Table, Columns, Where);
             if (result == null)
                 return database.LastErrorMessage;
             return result.ToString();
