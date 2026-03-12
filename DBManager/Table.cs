@@ -161,14 +161,6 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
             var indices = new List<int>();
- 
-            if (condition == null)
-            {
-                for (int i = 0; i < Rows.Count; i++)
-                    indices.Add(i);
-                return indices;
-            }
-
             for (int i = 0; i < Rows.Count; i++)
                 if (Rows[i].IsTrue(condition)) indices.Add(i);
             return indices;
@@ -197,13 +189,18 @@ namespace DbManager
             }
 
             List<ColumnDefinition> columnas = new List<ColumnDefinition>();
+
             foreach (string name in columnNames)
             {
                 ColumnDefinition colEncontrada = ColumnByName(name);
-                if (colEncontrada != null)
+
+
+                if (colEncontrada == null)
                 {
-                    columnas.Add(colEncontrada);
+                return new Table("Result", new List<ColumnDefinition>());
                 }
+
+                columnas.Add(colEncontrada);
             }
 
             Table result = new Table("Result", columnas);
@@ -214,9 +211,13 @@ namespace DbManager
                 {
                     List<string> values = new List<string>();
 
-                    foreach (var col in columnas)
+                    foreach (string name in columnNames)
                     {
-                        values.Add(row.GetValue(col.Name));
+                        int index = ColumnIndexByName(name);
+                        if (index != -1)
+                        {
+                            values.Add(row.Values[index]);
+                        }
                     }
                     result.Insert(values);
                 }
