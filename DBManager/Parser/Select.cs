@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DbManager 
+namespace DbManager
 {
     public class Select: MiniSqlQuery
     {
@@ -15,9 +11,9 @@ namespace DbManager
         public Select(string table, List<string> columns, Condition condition=null)
         {
             //TODO DEADLINE 2: Initialize member variables
-            Table= table;
-            Columns= columns;
-            Where= condition;
+            Table = table;
+            Columns = columns;
+            Where = condition;
         }
 
         public string Execute(Database database)

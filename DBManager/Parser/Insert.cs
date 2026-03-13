@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbManager
 {
@@ -13,8 +9,8 @@ namespace DbManager
         public Insert(string table, List<string> values)
         {
             //TODO DEADLINE 2: Initialize member variables
-            Table= table;
-            Values= values;
+            Table = table;
+            Values = values;
         }
 
         public string Execute(Database database)
