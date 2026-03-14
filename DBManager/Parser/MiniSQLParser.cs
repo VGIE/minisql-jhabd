@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = null;
+            const string selectPattern =  @"SELECT\s+(?<columns>[\w\*,\s]+)\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?";;
 
             const string insertPattern = null;
 
@@ -43,6 +43,22 @@ namespace DbManager
             //For example, if the query is a "SELECT ...", there should be a match with selectPattern. We would create and return an instance of Select
             //initialized with the table name, the columns, and (possibly) an instance of Condition.
             //If there is no match, it means there is a syntax error. We will return null.
+            if (miniSQLQuery == null)
+                return null;
+
+            Match match = Regex.Match(miniSQLQuery, selectPattern, RegexOptions.IgnoreCase);
+
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                var columns = CommaSeparatedNames(match.Groups["columns"].Value);
+                Condition condition = null;
+
+                if (match.Groups["column"].Success)
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+
+                return new Select(table, columns, condition);
+            }
 
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
