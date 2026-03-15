@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern =  @"SELECT\s+(?<columns>[\w\*,\s]+)\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?";;
+            const string selectPattern =  @"^SELECT\s+(?<columns>(\*|\w+(?:\s*,\s*\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
 
             const string insertPattern = null;
 
@@ -46,7 +46,7 @@ namespace DbManager
             if (miniSQLQuery == null)
                 return null;
 
-            Match match = Regex.Match(miniSQLQuery, selectPattern, RegexOptions.IgnoreCase);
+            Match match = Regex.Match(miniSQLQuery, selectPattern);
 
             if (match.Success)
             {
