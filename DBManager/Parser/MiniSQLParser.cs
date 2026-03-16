@@ -9,15 +9,16 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern =  @"^SELECT\s+(?<columns>(\*|\w+(?:\s*,\s*\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>\*|[\w\.,\s]+)\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>'.*'|[\w\.]+))?$";
 
-            const string insertPattern = null;
+            const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>(?:'[^']*'|[^,()]+)(?:\s*,\s*(?:'[^']*'|[^,()]+))*)\s*\)$";
 
             const string dropTablePattern = null;
 
-            //Note: The parsing of CREATE TABLE should accept empty columns "()"
+            //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
             const string createTablePattern = null;
+
 
             const string updateTablePattern = null;
 
@@ -58,6 +59,21 @@ namespace DbManager
                     condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
 
                 return new Select(table, columns, condition);
+            }
+
+            match = Regex.Match(miniSQLQuery, insertPattern);
+
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                var values = CommaSeparatedNames(match.Groups["values"].Value);
+
+                for (int i = 0; i < values.Count; i++)
+                {
+                    values[i] = values[i].Trim().Trim('\'', '"');
+                }
+
+                return new Insert(table, values);
             }
 
             //TODO DEADLINE 4

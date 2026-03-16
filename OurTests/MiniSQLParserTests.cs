@@ -22,6 +22,20 @@ namespace OurTests
         }
 
         [Fact]
+        public void ParseInsert()
+        {
+            var query = MiniSQLParser.Parse("INSERT INTO users VALUES ('Cardinal', 'Stavanger', 'Norway')");
+
+            Assert.NotNull(query);
+            Assert.IsType<Insert>(query);
+
+            Insert insert = (Insert)query;
+
+            Assert.Equal("users", insert.Table);
+            Assert.Equal(insert.Values, ["Cardinal", "Stavanger", "Norway"]);
+        }
+
+        [Fact]
         public void ParseException()
         {
             var query = MiniSQLParser.Parse(null);
