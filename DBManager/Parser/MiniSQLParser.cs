@@ -17,7 +17,7 @@ namespace DbManager
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"
             //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = null;
+            const string createTablePattern = @"^CREATE\s+^TABLE\s+(?<table>\w+)\s*\((?<columns>[^\)]*)\);?$";
 
             const string updateTablePattern = null;
 
@@ -60,6 +60,28 @@ namespace DbManager
                 return new Select(table, columns, condition);
             }
 
+            match = Regex.Match(miniSQLQuery, createTablePattern);
+
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                var columnsText = match.Groups["columns"].Value;
+                List<string> textosColumnas = new List<string>();
+
+                if (!string.IsNullOrWhiteSpace(columnsText))
+                {
+                    textosColumnas = CommaSeparatedNames(columnsText);
+                }
+
+                List<ColumnDefinition> columns = new List<ColumnDefinition>();
+
+                foreach (string textoColumna in textosColumnas)
+                {
+                    columns.Add(ColumnDefinition.Parse(textoColumna));
+                }
+
+                return new CreateTable(table, columns);
+            }
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
 
