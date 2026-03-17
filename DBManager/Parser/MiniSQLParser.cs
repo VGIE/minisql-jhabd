@@ -9,9 +9,9 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:\s*,\s*\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
 
-            const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:\s*,\s*'[^']*')*)\s*\)$";
+            const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
             const string dropTablePattern = null;
 
@@ -52,11 +52,6 @@ namespace DbManager
             {
                 var table = match.Groups["table"].Value;
                 var columns = CommaSeparatedNames(match.Groups["columns"].Value);
-
-                for (int i = 0; i < columns.Count; i++)
-                {
-                    columns[i] = columns[i].Trim();
-                }
 
                 Condition condition = null;
 

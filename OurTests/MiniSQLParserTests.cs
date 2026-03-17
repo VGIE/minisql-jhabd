@@ -7,7 +7,7 @@ namespace OurTests
         [Fact]
         public void ParseSelect()
         {
-            var query = MiniSQLParser.Parse("SELECT age, name FROM users WHERE age > 30");
+            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 30");
 
             Assert.NotNull(query);
             Assert.IsType<Select>(query);
@@ -24,7 +24,7 @@ namespace OurTests
         [Fact]
         public void ParseInsert()
         {
-            var query = MiniSQLParser.Parse("INSERT INTO users VALUES ('Cardinal', 'Stavanger', 'Norway')");
+            var query = MiniSQLParser.Parse("INSERT INTO users VALUES ('Cardinal','Stavanger','Norway')");
 
             Assert.NotNull(query);
             Assert.IsType<Insert>(query);
