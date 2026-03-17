@@ -19,7 +19,7 @@ namespace DbManager
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
             const string createTablePattern = @"(?i)^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\((?<columns>[^\)]*)\)\s*;?\s*$";
-            const string updateTablePattern = null;
+            const string updateTablePattern = @"(?i)^UPDATE\s+(?<table>[a-zA-Z0-9_]+)\s+SET\s+(?<assignments>.+?)(?:\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[^\s;]+))?\s*;?\s*$";;
 
             const string deletePattern = null;
 
@@ -60,6 +60,7 @@ namespace DbManager
 
                 return new Select(table, columns, condition);
             }
+
             match = Regex.Match(miniSQLQuery, createTablePattern);
 
             if (match.Success)
@@ -93,7 +94,38 @@ namespace DbManager
                 return new CreateTable(table, columns);
 
             }
-            
+
+            match = Regex.Match(miniSQLQuery, updateTablePattern); 
+
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                var assignmentsText = match.Groups["assignments"].Value;
+                Condition condition = null;
+
+                if (match.Groups["column"].Success)
+                {
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+                }
+
+                List<SetValue> columnsToUpdate = new List<SetValue>();
+                string[] asignaciones = assignmentsText.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string asig in asignaciones)
+                {
+                    string[] partes = asig.Split('=');
+
+                    if (partes.Length == 2)
+                    {
+                        string colName = partes[0].Trim();
+                        string colValue = partes[1].Trim(' ', '\''); 
+
+                        columnsToUpdate.Add(new SetValue(colName, colValue));
+                    }
+                }
+                return new Update(table, columnsToUpdate, condition);
+            }
+
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
 

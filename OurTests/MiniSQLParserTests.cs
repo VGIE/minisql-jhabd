@@ -38,7 +38,7 @@ namespace OurTests
             Assert.Equal("edad", createTable.ColumnsParameters[1].Name);
             Assert.Equal("Int", createTable.ColumnsParameters[1].Type.ToString());
         }
-        
+
         [Fact]
         public void ParseInsert()
         {
@@ -51,6 +51,31 @@ namespace OurTests
 
             Assert.Equal("users", insert.Table);
             Assert.Equal(insert.Values, ["Cardinal", "Stavanger", "Norway"]);
+        }
+
+        [Fact]
+        public void ParseUpdate()
+        {
+            var query = MiniSQLParser.Parse("UPDATE usuarios SET edad = 67, nombre = 'John Pork' WHERE id = 1;");
+
+            Assert.NotNull(query);
+            Assert.IsType<Update>(query);
+
+            Update update = (Update)query;
+
+            Assert.Equal("usuarios", update.Table);
+            Assert.Equal(2, update.Columns.Count); 
+
+            Assert.Equal("edad", update.Columns[0].ColumnName); 
+            Assert.Equal("67", update.Columns[0].Value);
+
+            Assert.Equal("nombre", update.Columns[1].ColumnName);
+            Assert.Equal("John Pork", update.Columns[1].Value);
+
+            Assert.NotNull(update.Where);
+            Assert.Equal("id", update.Where.ColumnName);
+            Assert.Equal("=", update.Where.Operator);
+            Assert.Equal("1", update.Where.LiteralValue);
         }
 
         [Fact]
