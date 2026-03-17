@@ -10,13 +10,13 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern =  @"^SELECT\s+(?<columns>(\*|\w+(?:\s*,\s*\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
 
-            const string insertPattern = null;
+            const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
             const string dropTablePattern = null;
 
-            //Note: The parsing of CREATE TABLE should accept empty columns "()"
+            //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
             const string createTablePattern = @"(?i)^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\((?<columns>[^\)]*)\)\s*;?\s*$";
             const string updateTablePattern = null;
@@ -52,6 +52,7 @@ namespace DbManager
             {
                 var table = match.Groups["table"].Value;
                 var columns = CommaSeparatedNames(match.Groups["columns"].Value);
+
                 Condition condition = null;
 
                 if (match.Groups["column"].Success)
@@ -60,40 +61,6 @@ namespace DbManager
                 return new Select(table, columns, condition);
             }
 
-            match = Regex.Match(miniSQLQuery, createTablePattern);
-
-            if (match.Success)
-            {
-                var table = match.Groups["table"].Value;
-                var columnsText = match.Groups["columns"].Value;
-                List<string> textosColumnas = new List<string>();
-
-                if (!string.IsNullOrWhiteSpace(columnsText))
-                {
-                    textosColumnas = CommaSeparatedNames(columnsText);
-                }
-
-                List<ColumnDefinition> columns = new List<ColumnDefinition>();
-
-                foreach (string textoColumna in textosColumnas)
-                    {
-                        string[] partes = textoColumna.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-                        if (partes.Length >= 2)
-                        {
-                            string nombre = partes[0]; 
-                            string tipoTexto = partes[1]; 
-
-                            ColumnDefinition.DataType tipo = System.Enum.Parse<ColumnDefinition.DataType>(tipoTexto, true);
-
-                            columns.Add(new ColumnDefinition(tipo, nombre));
-                        }
-                    }
-
-                return new CreateTable(table, columns);
-
-            }
-            
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
 

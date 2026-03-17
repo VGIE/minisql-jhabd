@@ -7,7 +7,7 @@ namespace OurTests
         [Fact]
         public void ParseSelect()
         {
-            var query = MiniSQLParser.Parse("SELECT * FROM users WHERE age > 30");
+            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 30");
 
             Assert.NotNull(query);
             Assert.IsType<Select>(query);
@@ -15,7 +15,7 @@ namespace OurTests
             Select select = (Select)query;
 
             Assert.Equal("users", select.Table);
-            Assert.Contains("*", select.Columns);
+            Assert.Equal(select.Columns, ["age", "name"]);
             Assert.Equal("age", select.Where.ColumnName);
             Assert.Equal(">", select.Where.Operator);
             Assert.Equal("30", select.Where.LiteralValue);
@@ -37,6 +37,20 @@ namespace OurTests
             Assert.Equal("String", createTable.ColumnsParameters[0].Type.ToString()); 
             Assert.Equal("edad", createTable.ColumnsParameters[1].Name);
             Assert.Equal("Int", createTable.ColumnsParameters[1].Type.ToString());
+        }
+        
+        [Fact]
+        public void ParseInsert()
+        {
+            var query = MiniSQLParser.Parse("INSERT INTO users VALUES ('Cardinal','Stavanger','Norway')");
+
+            Assert.NotNull(query);
+            Assert.IsType<Insert>(query);
+
+            Insert insert = (Insert)query;
+
+            Assert.Equal("users", insert.Table);
+            Assert.Equal(insert.Values, ["Cardinal", "Stavanger", "Norway"]);
         }
 
         [Fact]
