@@ -80,6 +80,19 @@ namespace OurTests
         }
 
         [Fact]
+        public void ParseDropTable()
+        {
+            var query = MiniSQLParser.Parse("DROP TABLE usuarios;");
+
+            Assert.NotNull(query);
+            Assert.IsType<DropTable>(query);
+
+            DropTable dropTable = (DropTable)query;
+
+            Assert.Equal("usuarios", dropTable.Table);
+        }
+
+        [Fact]
         public void ParseException()
         {
             var query = MiniSQLParser.Parse(null);
