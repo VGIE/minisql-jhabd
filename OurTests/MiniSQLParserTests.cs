@@ -36,6 +36,24 @@ namespace OurTests
         }
 
         [Fact]
+        public void ParseCreateTable()
+        {
+            var query = MiniSQLParser.Parse("CREATE TABLE manin (name String , edad int)");
+
+            Assert.NotNull(query);
+            Assert.IsType<CreateTable>(query);
+
+            CreateTable createTable = (CreateTable)query;
+
+            Assert.Equal("manin", createTable.Table);
+            Assert.Equal(2, createTable.ColumnsParameters.Count);
+            Assert.Equal("name", createTable.ColumnsParameters[0].Name);
+            Assert.Equal("String", createTable.ColumnsParameters[0].Type.ToString()); 
+            Assert.Equal("edad", createTable.ColumnsParameters[1].Name);
+            Assert.Equal("Int", createTable.ColumnsParameters[1].Type.ToString());
+        }
+
+        [Fact]
         public void ParseException()
         {
             var query = MiniSQLParser.Parse(null);
