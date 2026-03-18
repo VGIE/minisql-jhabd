@@ -12,6 +12,8 @@ namespace DbManager.Parser
         public Delete(string table, Condition where)
         {
             //TODO DEADLINE 2: Initialize member variables
+            this.Table = table;
+            this.Where = where;
             
         }
 
