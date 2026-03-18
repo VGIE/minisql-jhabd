@@ -13,7 +13,7 @@ namespace DbManager
 
             const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
-            const string dropTablePattern = null;
+            const string dropTablePattern = @"(?i)^DROP\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*;?\s*$";
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
@@ -142,7 +142,13 @@ namespace DbManager
                 return new Update(table, columnsToUpdate, condition);
             }
 
+            match = Regex.Match(miniSQLQuery, dropTablePattern);
 
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                return new DropTable(table);
+            }
 
 
             //TODO DEADLINE 4
