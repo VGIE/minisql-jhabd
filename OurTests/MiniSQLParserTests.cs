@@ -38,7 +38,7 @@ namespace OurTests
         [Fact]
         public void ParseCreateTable()
         {
-            var query = MiniSQLParser.Parse("CREATE TABLE manin (name String , edad int)");
+            var query = MiniSQLParser.Parse("CREATE TABLE manin (name String,edad int)");
 
             Assert.NotNull(query);
             Assert.IsType<CreateTable>(query);
@@ -56,8 +56,7 @@ namespace OurTests
         [Fact]
         public void ParseUpdate()
         {
-            var query = MiniSQLParser.Parse("UPDATE usuarios SET edad = 67, nombre = 'John Pork' WHERE id = 1;");
-
+            var query = MiniSQLParser.Parse("UPDATE usuarios SET edad='67',nombre='John Pork' WHERE id='1';");
             Assert.NotNull(query);
             Assert.IsType<Update>(query);
 

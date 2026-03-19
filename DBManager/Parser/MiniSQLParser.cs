@@ -18,9 +18,9 @@ namespace DbManager
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
 
-            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\(\s*(?<columns>\w+\s+\w+(?:\s*,\s*\w+\s+\w+)*)?\s*\)\s*;?\s*$";
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s+\((?<columns>[a-zA-Z0-9]+\s+[a-zA-Z0-9]+(?:,[a-zA-Z0-9]+\s+[a-zA-Z0-9]+)*)\)\s*;?\s*$";
 
-            const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<assignments>\w+\s*=\s*(?:\d+(\.\d+)?|'[^']*')(?:,\s*\w+\s*=\s*(?:\d+(\.\d+)?|'[^']*'))*)(?:\s+WHERE\s+(?<column>\w+)\s*(?<op>[=<>!]+)\s*(?<value>[^\s;]+))?\s*;?\s*$";
+            const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z0-9]+)\s+SET\s+(?<assignments>[a-zA-Z0-9]+='[^']*'(?:,[a-zA-Z0-9]+='[^']*')*)(?:\s+WHERE\s+(?<column>[a-zA-Z0-9]+)(?<op>[<>=])(?<value>'[^']*'))?\s*;?\s*$";
 
             const string deletePattern = null;
 
@@ -77,7 +77,6 @@ namespace DbManager
                 return new Insert(table, values);
             }
 
-            
             match = Regex.Match(miniSQLQuery, createTablePattern);
 
             if (match.Success)
@@ -122,7 +121,8 @@ namespace DbManager
 
                 if (match.Groups["column"].Success)
                 {
-                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+                    string whereValue = match.Groups["value"].Value.Trim('\'');
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, whereValue);
                 }
 
                 List<SetValue> columnsToUpdate = new List<SetValue>();
