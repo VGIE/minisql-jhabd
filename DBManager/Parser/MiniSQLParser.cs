@@ -17,9 +17,10 @@ namespace DbManager
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = @"(?i)^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\((?<columns>[^\)]*)\)\s*;?\s*$";
 
-            const string updateTablePattern = @"(?i)^UPDATE\s+(?<table>[a-zA-Z0-9_]+)\s+SET\s+(?<assignments>.+?)(?:\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[^\s;]+))?\s*;?\s*$";
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\(\s*(?<columns>\w+\s+\w+(?:\s*,\s*\w+\s+\w+)*)?\s*\)\s*;?\s*$";
+
+            const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<assignments>\w+\s*=\s*(?:\d+(\.\d+)?|'[^']*')(?:,\s*\w+\s*=\s*(?:\d+(\.\d+)?|'[^']*'))*)(?:\s+WHERE\s+(?<column>\w+)\s*(?<op>[=<>!]+)\s*(?<value>[^\s;]+))?\s*;?\s*$";
 
             const string deletePattern = null;
 
