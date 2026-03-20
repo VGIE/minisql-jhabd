@@ -18,7 +18,7 @@ namespace DbManager
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
 
-            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s+\((?<columns>[a-zA-Z0-9]+\s+[a-zA-Z0-9]+(?:,[a-zA-Z0-9]+\s+[a-zA-Z0-9]+)*)\)\s*;?\s*$";
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s*\(\s*(?<columns>[a-zA-Z0-9]+\s+[a-zA-Z0-9]+(?:,[a-zA-Z0-9]+\s+[a-zA-Z0-9]+)*)\s*\)\s*;?\s*$";
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z0-9]+)\s+SET\s+(?<assignments>[a-zA-Z0-9]+='[^']*'(?:,[a-zA-Z0-9]+='[^']*')*)(?:\s+WHERE\s+(?<column>[a-zA-Z0-9]+)(?<op>[<>=])(?<value>'[^']*'))?\s*;?\s*$";
 
@@ -79,7 +79,7 @@ namespace DbManager
 
             match = Regex.Match(miniSQLQuery, createTablePattern);
 
-            if (match.Success)
+           if (match.Success)
             {
                 var table = match.Groups["table"].Value;
                 var columnsText = match.Groups["columns"].Value;
@@ -93,22 +93,25 @@ namespace DbManager
                 List<ColumnDefinition> columns = new List<ColumnDefinition>();
 
                 foreach (string textoColumna in textosColumnas)
+                {
+                    string[] partes = textoColumna.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                    if (partes.Length >= 2)
                     {
-                        string[] partes = textoColumna.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+                        string nombre = partes[0]; 
+                        string tipoTexto = partes[1]; 
 
-                        if (partes.Length >= 2)
+                        if (System.Enum.TryParse<ColumnDefinition.DataType>(tipoTexto, true, out var tipo))
                         {
-                            string nombre = partes[0]; 
-                            string tipoTexto = partes[1]; 
-
-                            ColumnDefinition.DataType tipo = System.Enum.Parse<ColumnDefinition.DataType>(tipoTexto, true);
-
                             columns.Add(new ColumnDefinition(tipo, nombre));
                         }
+                        else
+                        {
+                            return null; 
+                        }
                     }
-
+                }
                 return new CreateTable(table, columns);
-
             }
 
             match = Regex.Match(miniSQLQuery, updateTablePattern); 
