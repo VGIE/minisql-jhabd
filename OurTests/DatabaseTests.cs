@@ -22,6 +22,17 @@ namespace OurTests
         }
 
         [Fact]
+        public void AddTable()
+        {
+            var database = Database.CreateTestDatabase();
+
+            var tabla = new Table("TablaNueva", null);
+
+            Assert.True(database.AddTable(tabla));
+            Assert.False(database.AddTable(null));
+        }
+
+        [Fact]
         public void CreateTableNombreExistente()
         {
             var database = Database.CreateTestDatabase();
