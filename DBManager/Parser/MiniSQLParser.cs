@@ -18,7 +18,7 @@ namespace DbManager
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
 
-            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s*\(\s*(?<columns>[a-zA-Z0-9]+\s+[a-zA-Z0-9]+(?:,[a-zA-Z0-9]+\s+[a-zA-Z0-9]+)*)\s*\)\s*;?\s*$";
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s+\((?<columns>[a-zA-Z0-9]+\s+(?:INT|DOUBLE|TEXT)(?:,[a-zA-Z0-9]+\s+(?:INT|DOUBLE|TEXT))*)\)\s*;?\s*$";
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z0-9]+)\s+SET\s+(?<assignments>[a-zA-Z0-9]+='[^']*'(?:,[a-zA-Z0-9]+='[^']*')*)(?:\s+WHERE\s+(?<column>[a-zA-Z0-9]+)(?<op>[<>=])(?<value>'[^']*'))?\s*;?\s*$";
 
@@ -100,6 +100,11 @@ namespace DbManager
                     {
                         string nombre = partes[0]; 
                         string tipoTexto = partes[1]; 
+
+                        if (tipoTexto.ToUpper() == "TEXT")
+                        {
+                            tipoTexto = "String";
+                        }
 
                         if (System.Enum.TryParse<ColumnDefinition.DataType>(tipoTexto, true, out var tipo))
                         {
