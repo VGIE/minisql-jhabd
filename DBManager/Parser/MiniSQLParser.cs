@@ -22,7 +22,7 @@ namespace DbManager
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z0-9]+)\s+SET\s+(?<assignments>[a-zA-Z0-9]+='[^']*'(?:,[a-zA-Z0-9]+='[^']*')*)(?:\s+WHERE\s+(?<column>[a-zA-Z0-9]+)(?<op>[<>=])(?<value>'[^']*'))?\s*;?\s*$";
 
-            const string deletePattern = null;
+            const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
 
 
             //TODO DEADLINE 4
@@ -162,7 +162,18 @@ namespace DbManager
 
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+            match = Regex.Match(miniSQLQuery, deletePattern);
 
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                Condition condition = null;
+
+                if (match.Groups["column"].Success)
+                    condition = new Condition (match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+
+                return new Delete(table, condition);
+            }
             return null;
         }
 
