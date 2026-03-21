@@ -98,22 +98,11 @@ namespace DbManager
 
                     if (partes.Length >= 2)
                     {
-                        string nombre = partes[0]; 
-                        string tipoTexto = partes[1]; 
+                        string nombre = partes[0];
+                        string tipoTexto = partes[1];
 
-                        if (tipoTexto.ToUpper() == "TEXT")
-                        {
-                            tipoTexto = "String";
-                        }
-
-                        if (System.Enum.TryParse<ColumnDefinition.DataType>(tipoTexto, true, out var tipo))
-                        {
-                            columns.Add(new ColumnDefinition(tipo, nombre));
-                        }
-                        else
-                        {
-                            return null; 
-                        }
+                        ColumnDefinition.DataType tipo = DataTypeUtils.FromMiniSQLName(tipoTexto);
+                        columns.Add(new ColumnDefinition(tipo, nombre));
                     }
                 }
                 return new CreateTable(table, columns);
