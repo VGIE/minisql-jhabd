@@ -1,4 +1,5 @@
 using DbManager;
+using DbManager.Parser;
 
 namespace OurTests
 {
@@ -7,7 +8,7 @@ namespace OurTests
         [Fact]
         public void ParseSelect()
         {
-            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 30");
+            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 'abra bacadabra'");
 
             Assert.NotNull(query);
             Assert.IsType<Select>(query);
@@ -18,7 +19,7 @@ namespace OurTests
             Assert.Equal(select.Columns, ["age", "name"]);
             Assert.Equal("age", select.Where.ColumnName);
             Assert.Equal(">", select.Where.Operator);
-            Assert.Equal("30", select.Where.LiteralValue);
+            Assert.Equal("abra bacadabra", select.Where.LiteralValue);
         }
 
         [Fact]
