@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>'[\w\.\s]+'))?$";
 
             const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
@@ -53,11 +53,14 @@ namespace DbManager
             {
                 var table = match.Groups["table"].Value;
                 var columns = CommaSeparatedNames(match.Groups["columns"].Value);
+                var LiteralValue = match.Groups["value"].Value;
+
+                LiteralValue = LiteralValue.Trim('\'', '"');
 
                 Condition condition = null;
 
                 if (match.Groups["column"].Success)
-                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, LiteralValue);
 
                 return new Select(table, columns, condition);
             }
@@ -98,22 +101,11 @@ namespace DbManager
 
                     if (partes.Length >= 2)
                     {
-                        string nombre = partes[0]; 
-                        string tipoTexto = partes[1]; 
+                        string nombre = partes[0];
+                        string tipoTexto = partes[1];
 
-                        if (tipoTexto.ToUpper() == "TEXT")
-                        {
-                            tipoTexto = "String";
-                        }
-
-                        if (System.Enum.TryParse<ColumnDefinition.DataType>(tipoTexto, true, out var tipo))
-                        {
-                            columns.Add(new ColumnDefinition(tipo, nombre));
-                        }
-                        else
-                        {
-                            return null; 
-                        }
+                        ColumnDefinition.DataType tipo = DataTypeUtils.FromMiniSQLName(tipoTexto);
+                        columns.Add(new ColumnDefinition(tipo, nombre));
                     }
                 }
                 return new CreateTable(table, columns);
