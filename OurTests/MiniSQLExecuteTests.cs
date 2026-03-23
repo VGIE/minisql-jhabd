@@ -1,0 +1,82 @@
+using DbManager;
+
+namespace OurTests
+{
+    public class MiniSQLExecuteTests
+    {
+        [Fact]
+        public void CreateTableVacioTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+
+            CreateTable tabla = new CreateTable(nombre,columns);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
+        }
+
+        [Fact]
+        public void CreateTableTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+
+            CreateTable tabla = new CreateTable(nombre,columns);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.CreateTableSuccess, result);
+        }
+
+        [Fact]
+        public void CreateTableRepetidoTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+
+            CreateTable tabla = new CreateTable(nombre,columns);
+            Database testDb = new Database("db", "contraseña");
+            tabla.Execute(testDb);
+
+            CreateTable tablaErronea = new CreateTable(nombre,columns);
+            string resultErroneo =  tablaErronea.Execute(testDb);
+
+            Assert.Equal(Constants.TableAlreadyExistsError, resultErroneo);
+        }
+
+        [Fact]
+        public void InsertErroneoTest()
+        {
+            String nombre = "manin";
+            List<String> values= new List<String>();
+            values.Add(new string( "hola"));
+
+            Insert tabla = new Insert(nombre,values);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.InsertSuccess, result);
+        }
+
+        [Fact]
+        public void InsertTest()
+        {
+            String nombre = "manin";
+            List<String> values= new List<String>();
+
+            Insert tabla = new Insert(nombre,values);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.TableDoesNotExistError, result);
+        }
+    }
+}
+
+
