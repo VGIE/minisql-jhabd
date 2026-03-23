@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DbManager;
 using DbManager.Parser;
 
@@ -20,6 +21,49 @@ namespace OurTests
             Assert.Equal("age", select.Where.ColumnName);
             Assert.Equal(">", select.Where.Operator);
             Assert.Equal("abra bacadabra", select.Where.LiteralValue);
+        }
+
+        [Fact]
+        public void ParseDelete()
+        {
+            var query = MiniSQLParser.Parse("DELETE FROM a WHERE age='0'");
+            Assert.NotNull(query);
+            Assert.IsType<Delete>(query);
+
+            Delete delete = (Delete)query;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("age", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("0", delete.Where.LiteralValue);
+
+            var query2 = MiniSQLParser.Parse("DELETE       FROM          a      WHERE      age='0'");
+            Assert.NotNull(query2);
+            Assert.IsType<Delete>(query2);
+
+            delete = (Delete)query2;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("age", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("0", delete.Where.LiteralValue);
+
+            var query3 = MiniSQLParser.Parse("DELETE       FROM          a");
+            Assert.Null(query3);
+
+            var query4 = MiniSQLParser.Parse("DELETE       FROM     a    WHERE nombre='abra bacadabra'");
+            Assert.NotNull(query4);
+            Assert.IsType<Delete>(query4);
+
+            delete = (Delete)query4;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("nombre", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("abra bacadabra", delete.Where.LiteralValue);
+
+            var query5 = MiniSQLParser.Parse("DELETE       FROM         WHERE nombre='abra bacadabra'");
+            Assert.Null(query5);
         }
 
         [Fact]
