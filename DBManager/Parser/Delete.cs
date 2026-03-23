@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DbManager.Parser
+namespace DbManager
 {
     public class Delete : MiniSqlQuery
     {

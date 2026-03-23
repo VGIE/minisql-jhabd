@@ -1,6 +1,4 @@
-using System.Text.RegularExpressions;
 using DbManager;
-using DbManager.Parser;
 
 namespace OurTests
 {
