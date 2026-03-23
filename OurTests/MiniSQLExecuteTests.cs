@@ -49,6 +49,33 @@ namespace OurTests
 
             Assert.Equal(Constants.TableAlreadyExistsError, resultErroneo);
         }
+
+        [Fact]
+        public void InsertErroneoTest()
+        {
+            String nombre = "manin";
+            List<String> values= new List<String>();
+            values.Add(new string( "hola"));
+
+            Insert tabla = new Insert(nombre,values);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.InsertSuccess, result);
+        }
+
+        [Fact]
+        public void InsertTest()
+        {
+            String nombre = "manin";
+            List<String> values= new List<String>();
+
+            Insert tabla = new Insert(nombre,values);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.TableDoesNotExistError, result);
+        }
     }
 }
 
