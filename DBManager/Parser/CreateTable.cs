@@ -21,10 +21,21 @@ namespace DbManager
         {
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //CreateTableSuccess or the last error in the database
-            
-            return null;
-            
-        }
+            if (ColumnsParameters==null || ColumnsParameters.Count==0)
+            {
+                return Constants.DatabaseCreatedWithoutColumnsError;
+            }
+            else
+            {
+                database.CreateTable(Table,ColumnsParameters);
 
+                if (string.IsNullOrEmpty(database.LastErrorMessage))
+                {
+                    return Constants.CreateTableSuccess;
+                }
+
+                return database.LastErrorMessage;
+            }
+        }
     }
 }
