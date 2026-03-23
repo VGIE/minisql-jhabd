@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>'[\w\.\s]+'))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*'(?<value>[\w\.\s]+)')?$";
 
             const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
@@ -53,14 +53,11 @@ namespace DbManager
             {
                 var table = match.Groups["table"].Value;
                 var columns = CommaSeparatedNames(match.Groups["columns"].Value);
-                var LiteralValue = match.Groups["value"].Value;
-
-                LiteralValue = LiteralValue.Trim('\'', '"');
 
                 Condition condition = null;
 
                 if (match.Groups["column"].Success)
-                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, LiteralValue);
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
 
                 return new Select(table, columns, condition);
             }
