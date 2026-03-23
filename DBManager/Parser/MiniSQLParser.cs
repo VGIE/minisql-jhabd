@@ -159,10 +159,13 @@ namespace DbManager
             if (match.Success)
             {
                 var table = match.Groups["table"].Value;
+                var LiteralValue = match.Groups["value"].Value;
                 Condition condition = null;
 
+                LiteralValue = LiteralValue.Trim('\'', '"');
+
                 if (match.Groups["column"].Success)
-                    condition = new Condition (match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+                    condition = new Condition (match.Groups["column"].Value, match.Groups["op"].Value, LiteralValue);
 
                 return new Delete(table, condition);
             }
