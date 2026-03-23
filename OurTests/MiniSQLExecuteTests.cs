@@ -31,6 +31,24 @@ namespace OurTests
 
             Assert.Equal(Constants.CreateTableSuccess, result);
         }
+
+        [Fact]
+        public void CreateTableRepetidoTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+
+            CreateTable tabla = new CreateTable(nombre,columns);
+            Database testDb = new Database("db", "contraseña");
+            tabla.Execute(testDb);
+
+            CreateTable tablaErronea = new CreateTable(nombre,columns);
+            string resultErroneo =  tablaErronea.Execute(testDb);
+
+            Assert.Equal(Constants.TableAlreadyExistsError, resultErroneo);
+        }
     }
 }
 
