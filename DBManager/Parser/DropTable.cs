@@ -21,8 +21,17 @@ namespace DbManager
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //DropTableSuccess or the last error in the database
             
-            return null;
+            database.DropTable(Table);
+
+                if (string.IsNullOrEmpty(database.LastErrorMessage))
+                {
+                    return Constants.CreateTableSuccess;
+                }
+
+                return database.LastErrorMessage;
+            }
+           
             
-        }
+        
     }
 }
