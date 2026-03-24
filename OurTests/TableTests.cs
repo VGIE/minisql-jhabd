@@ -24,6 +24,13 @@ namespace OurTests
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Row1, resultado.Values[0]);
 
+            resultado = tabla.GetRow(10);
+
+            Assert.Null(resultado);
+
+            resultado = tabla.GetRow(-1);
+
+            Assert.Null(resultado);
         }
 
         [Fact]
@@ -72,6 +79,14 @@ namespace OurTests
 
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Name, resultado.Name);
+
+            resultado = tabla.GetColumn(10);
+
+            Assert.Null(resultado);
+
+            resultado = tabla.GetColumn(-1);
+
+            Assert.Null(resultado);
         }
 
         [Fact]
@@ -104,6 +119,10 @@ namespace OurTests
             var resultado = tabla.ColumnIndexByName(Table.TestColumn1Name);
 
             Assert.Equal(0, resultado);
+
+            resultado = tabla.ColumnIndexByName("A");
+
+            Assert.Equal(-1, resultado);
         }
 
        [Fact]

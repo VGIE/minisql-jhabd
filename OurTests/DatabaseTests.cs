@@ -59,6 +59,11 @@ namespace OurTests
 
             Assert.False(resultado);
             Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, database.LastErrorMessage);
+
+            resultado = database.CreateTable(nombreInventado, null);
+
+            Assert.False(resultado);
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, database.LastErrorMessage);
         }
 
         [Fact]
