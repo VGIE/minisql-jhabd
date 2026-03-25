@@ -82,6 +82,19 @@ namespace OurTests
 
             Assert.Equal(Constants.TableDoesNotExistError, result);
         }
+
+        [Fact]
+        public void DeleteErroneoTest()
+        {
+            Database testDb = new Database("db", "contraseña");
+            String nombreTabla = "manin";
+            Condition condicionFalsa = new Condition("id", "=", "1"); 
+
+            Delete deleteQuery = new Delete(nombreTabla, condicionFalsa);
+            string result = deleteQuery.Execute(testDb);
+
+            Assert.Equal(Constants.TableDoesNotExistError, result);
+        }
     }
 }
 
