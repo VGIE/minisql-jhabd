@@ -51,7 +51,7 @@ namespace OurTests
         }
 
         [Fact]
-        public void InsertCorrectoTest() 
+        public void InsertTest() 
         {
             String nombre = "manin";
             Database testDb = new Database("db", "contraseña");
@@ -88,12 +88,37 @@ namespace OurTests
         {
             Database testDb = new Database("db", "contraseña");
             String nombreTabla = "manin";
-            Condition condicionFalsa = new Condition("id", "=", "1"); 
 
-            Delete deleteQuery = new Delete(nombreTabla, condicionFalsa);
+            Condition condicion = new Condition("id", "=", "1"); 
+
+            Delete deleteQuery = new Delete(nombreTabla, condicion);
             string result = deleteQuery.Execute(testDb);
 
             Assert.Equal(Constants.TableDoesNotExistError, result);
+        }
+
+        [Fact]
+        public void DeleteTest()
+        {
+            Database testDb = new Database("db", "contraseña");
+            String nombreTabla = "usuarios";
+
+            List<ColumnDefinition> columnas = new List<ColumnDefinition>();
+            columnas.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+            CreateTable crearTabla = new CreateTable(nombreTabla, columnas);
+            crearTabla.Execute(testDb); 
+
+            List<String> valores = new List<String>();
+            valores.Add("Jon");
+            Insert insertQuery = new Insert(nombreTabla, valores);
+            insertQuery.Execute(testDb);
+
+            Condition condicion = new Condition("nombre", "=", "Jon");
+            Delete deleteQuery = new Delete(nombreTabla, condicion);
+
+            string result = deleteQuery.Execute(testDb);
+
+            Assert.Equal(Constants.DeleteSuccess, result);
         }
     }
 }
