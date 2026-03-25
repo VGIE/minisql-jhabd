@@ -173,6 +173,18 @@ namespace OurTests
 
             Assert.Equal(Table.TestColumn1Row1, resultTable.GetRow(0).Values[0]);
             Assert.Equal(Table.TestColumn3Row1, resultTable.GetRow(0).Values[1]);
+
+            resultTable = table.Select([], null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(null, null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(["*"], null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(["asdsadasd"], null);
+            Assert.Null(resultTable.GetColumn(0));
         }
     }
 }
