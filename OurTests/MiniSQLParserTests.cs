@@ -143,9 +143,21 @@ namespace OurTests
             query = MiniSQLParser.Parse("");
             Assert.Null(query);
         }
+
+        [Fact]
+        public void ParseCreateSecuirityProfile()
+        {
+            var query = MiniSQLParser.Parse("CREATE SECURITY PROFILE a;");
+
+            Assert.NotNull(query);
+            Assert.IsType<CreateSecurityProfile>(query);
+
+            CreateSecurityProfile csp = (CreateSecurityProfile)query;
+
+            Assert.Equal("a", csp.ProfileName);
+        }
     }
 }
-
 
 //⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣠⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣄⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣤⡶⣾
 //⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⢀⣴⣿⡿⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⢿⣷⢄⠙⣙⢛⣒⣀⣀⣀⣀⣀⣀⣀⡀⡀⡀⡀⡀⣀⣀⢀⡀⡀⣀⣼⢞⣗⣿
