@@ -125,7 +125,7 @@ namespace OurTests
             Assert.Equal(-1, resultado);
         }
 
-       [Fact]
+        [Fact]
         public void ToStringTest()
         {
             var tabla = Table.CreateTestTable();
@@ -147,6 +147,15 @@ namespace OurTests
             Assert.Contains(Table.TestColumn1Row1, resultado);
             Assert.Contains("30", resultado);
             Assert.StartsWith("['", resultado);
+
+            resultado = new Table("a", null).ToString();
+            Assert.Equal("", resultado);
+
+            resultado = new Table("a", []).ToString();
+            Assert.Equal("", resultado);
+
+            resultado = new Table("a", [new ColumnDefinition(ColumnDefinition.DataType.String, "col1")]).ToString();
+            Assert.Equal("['col1']", resultado);
         }
 
         [Fact]

@@ -128,7 +128,7 @@ namespace DbManager
             }
             result += "']";
 
-            if(Rows != null && Rows.Count > 0)
+            if(Rows.Count > 0)
             {
                 foreach(Row row in Rows)
                 {
