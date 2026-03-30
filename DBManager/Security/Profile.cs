@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbManager.Security
 {
@@ -17,24 +13,28 @@ namespace DbManager.Security
         public bool GrantPrivilege(string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Grant this privilege on this table. Return false if there is an error, true otherwise
-            
-            return false;
-            
+            if (!PrivilegesOn.TryGetValue(table, out List<Privilege> privs))
+            {
+                privs = [];
+                PrivilegesOn[table] = privs;
+            }
+
+            if (!privs.Contains(privilege))
+                privs.Add(privilege);
+
+            return true;    // If the privilege is already granted, we consider it as a success
         }
 
         public bool RevokePrivilege(string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Revoke this privilege on this table. Return false if there is an error, true otherwise
-            
-            return false;
-            
+            return PrivilegesOn.TryGetValue(table, out List<Privilege> privs) && privs.Remove(privilege);   // If the privilege is not found, we consider it as false
         }
 
         public bool IsGrantedPrivilege(string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Return whether this profile is granted this privilege on this table
-            
-            return false;
+            return PrivilegesOn.TryGetValue(table, out List<Privilege> privs) && privs.Contains(privilege);
         }
     }
 }
