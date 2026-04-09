@@ -24,6 +24,13 @@ namespace OurTests
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Row1, resultado.Values[0]);
 
+            resultado = tabla.GetRow(10);
+
+            Assert.Null(resultado);
+
+            resultado = tabla.GetRow(-1);
+
+            Assert.Null(resultado);
         }
 
         [Fact]
@@ -72,6 +79,14 @@ namespace OurTests
 
             Assert.NotNull(resultado);
             Assert.Equal(Table.TestColumn1Name, resultado.Name);
+
+            resultado = tabla.GetColumn(10);
+
+            Assert.Null(resultado);
+
+            resultado = tabla.GetColumn(-1);
+
+            Assert.Null(resultado);
         }
 
         [Fact]
@@ -104,9 +119,13 @@ namespace OurTests
             var resultado = tabla.ColumnIndexByName(Table.TestColumn1Name);
 
             Assert.Equal(0, resultado);
+
+            resultado = tabla.ColumnIndexByName("A");
+
+            Assert.Equal(-1, resultado);
         }
 
-       [Fact]
+        [Fact]
         public void ToStringTest()
         {
             var tabla = Table.CreateTestTable();
@@ -128,6 +147,15 @@ namespace OurTests
             Assert.Contains(Table.TestColumn1Row1, resultado);
             Assert.Contains("30", resultado);
             Assert.StartsWith("['", resultado);
+
+            resultado = new Table("a", null).ToString();
+            Assert.Equal("", resultado);
+
+            resultado = new Table("a", []).ToString();
+            Assert.Equal("", resultado);
+
+            resultado = new Table("a", [new ColumnDefinition(ColumnDefinition.DataType.String, "col1")]).ToString();
+            Assert.Equal("['col1']", resultado);
         }
 
         [Fact]
@@ -154,6 +182,18 @@ namespace OurTests
 
             Assert.Equal(Table.TestColumn1Row1, resultTable.GetRow(0).Values[0]);
             Assert.Equal(Table.TestColumn3Row1, resultTable.GetRow(0).Values[1]);
+
+            resultTable = table.Select([], null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(null, null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(["*"], null);
+            Assert.Equal(Table.TestColumn1Name, resultTable.GetColumn(0).Name);
+
+            resultTable = table.Select(["asdsadasd"], null);
+            Assert.Null(resultTable.GetColumn(0));
         }
     }
 }

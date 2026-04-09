@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[\w\.]+))?$";
+            const string selectPattern = @"^SELECT\s+(?<columns>(\*|\w+(?:,\w+)*))\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*'(?<value>[\w\.\s]+)')?$";
 
             const string insertPattern = @"^INSERT\s+INTO\s+(?<table>\w+)\s+VALUES\s*\(\s*(?<values>'[^']*'(?:,'[^']*')*)\s*\)$";
 
@@ -17,15 +17,16 @@ namespace DbManager
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"`
             //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = @"(?i)^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9_]+)\s*\((?<columns>[^\)]*)\)\s*;?\s*$";
 
-            const string updateTablePattern = @"(?i)^UPDATE\s+(?<table>[a-zA-Z0-9_]+)\s+SET\s+(?<assignments>.+?)(?:\s+WHERE\s+(?<column>\w+)\s*(?<op><=|>=|!=|=|<|>)\s*(?<value>[^\s;]+))?\s*;?\s*$";;
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[a-zA-Z0-9]+)\s+\((?<columns>[a-zA-Z0-9]+\s+(?:INT|DOUBLE|TEXT)(?:,[a-zA-Z0-9]+\s+(?:INT|DOUBLE|TEXT))*)?\)\s*;?\s*$";
 
-            const string deletePattern = null;
+            const string updateTablePattern = @"^UPDATE\s+(?<table>[a-zA-Z0-9]+)\s+SET\s+(?<assignments>[a-zA-Z0-9]+='[^']*'(?:,[a-zA-Z0-9]+='[^']*')*)(?:\s+WHERE\s+(?<column>[a-zA-Z0-9]+)(?<op>[<>=])(?<value>'[^']*'))?\s*;?\s*$";
+
+            const string deletePattern = @"^\s*DELETE\s+FROM\s+(?<table>\w+)(\s+WHERE\s+(?<column>\w+)(?<op><=|>=|!=|=|<|>)(?<value>'[\w\.\s\-]+'))\s*;?\s*$";
 
 
             //TODO DEADLINE 4
-            const string createSecurityProfilePattern = null;
+            const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+(?<profile>[a-zA-Z]+)\s*;?\s*$";
 
             const string dropSecurityProfilePattern = null;
 
@@ -76,10 +77,9 @@ namespace DbManager
                 return new Insert(table, values);
             }
 
-            
             match = Regex.Match(miniSQLQuery, createTablePattern);
 
-            if (match.Success)
+           if (match.Success)
             {
                 var table = match.Groups["table"].Value;
                 var columnsText = match.Groups["columns"].Value;
@@ -93,22 +93,19 @@ namespace DbManager
                 List<ColumnDefinition> columns = new List<ColumnDefinition>();
 
                 foreach (string textoColumna in textosColumnas)
+                {
+                    string[] partes = textoColumna.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                    if (partes.Length >= 2)
                     {
-                        string[] partes = textoColumna.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+                        string nombre = partes[0];
+                        string tipoTexto = partes[1];
 
-                        if (partes.Length >= 2)
-                        {
-                            string nombre = partes[0]; 
-                            string tipoTexto = partes[1]; 
-
-                            ColumnDefinition.DataType tipo = System.Enum.Parse<ColumnDefinition.DataType>(tipoTexto, true);
-
-                            columns.Add(new ColumnDefinition(tipo, nombre));
-                        }
+                        ColumnDefinition.DataType tipo = DataTypeUtils.FromMiniSQLName(tipoTexto);
+                        columns.Add(new ColumnDefinition(tipo, nombre));
                     }
-
+                }
                 return new CreateTable(table, columns);
-
             }
 
             match = Regex.Match(miniSQLQuery, updateTablePattern); 
@@ -121,7 +118,8 @@ namespace DbManager
 
                 if (match.Groups["column"].Success)
                 {
-                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, match.Groups["value"].Value);
+                    string whereValue = match.Groups["value"].Value.Trim('\'');
+                    condition = new Condition(match.Groups["column"].Value, match.Groups["op"].Value, whereValue);
                 }
 
                 List<SetValue> columnsToUpdate = new List<SetValue>();
@@ -162,6 +160,31 @@ namespace DbManager
                 var profile = match.Groups["profile"].Value;
 
                 return new Grant(privilege, table, profile);
+            }
+
+            match = Regex.Match(miniSQLQuery, deletePattern);
+
+            if (match.Success)
+            {
+                var table = match.Groups["table"].Value;
+                var LiteralValue = match.Groups["value"].Value;
+                Condition condition = null;
+
+                LiteralValue = LiteralValue.Trim('\'', '"');
+
+                if (match.Groups["column"].Success)
+                    condition = new Condition (match.Groups["column"].Value, match.Groups["op"].Value, LiteralValue);
+
+                return new Delete(table, condition);
+            }
+
+            match = Regex.Match(miniSQLQuery, createSecurityProfilePattern);
+
+            if (match.Success)
+            {
+                var profile = match.Groups["profile"].Value;
+
+                return new CreateSecurityProfile(profile);
             }
 
             return null;

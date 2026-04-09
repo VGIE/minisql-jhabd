@@ -22,6 +22,17 @@ namespace OurTests
         }
 
         [Fact]
+        public void AddTable()
+        {
+            var database = Database.CreateTestDatabase();
+
+            var tabla = new Table("TablaNueva", null);
+
+            Assert.True(database.AddTable(tabla));
+            Assert.False(database.AddTable(null));
+        }
+
+        [Fact]
         public void CreateTableNombreExistente()
         {
             var database = Database.CreateTestDatabase();
@@ -45,6 +56,11 @@ namespace OurTests
             String nombreInventado = "TablaNueva";
 
             bool resultado = database.CreateTable(nombreInventado,columnasNuevas);
+
+            Assert.False(resultado);
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, database.LastErrorMessage);
+
+            resultado = database.CreateTable(nombreInventado, null);
 
             Assert.False(resultado);
             Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, database.LastErrorMessage);

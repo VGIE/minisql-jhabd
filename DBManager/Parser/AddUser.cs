@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DbManager.Parser;
+using DbManager.Security;
 
 namespace DbManager
 {
@@ -16,7 +17,9 @@ namespace DbManager
         public AddUser(string username, string password, string profileName)
         {
             //TODO DEADLINE 4: Initialize member variables
-            
+            Username = username;
+            Password = password;
+            ProfileName = profileName;
         }
         public string Execute(Database database)
         {

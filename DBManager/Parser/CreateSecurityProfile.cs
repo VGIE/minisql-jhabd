@@ -13,16 +13,14 @@ namespace DbManager
         public CreateSecurityProfile(string profileName)
         {
             //TODO DEADLINE 4: Initialize member variables
-            
+            ProfileName = profileName;
         }
+
         public string Execute(Database database)
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, CreateSecurityProfileSuccess
-            
             return null;
-            
         }
-
     }
 }

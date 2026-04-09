@@ -7,7 +7,7 @@ namespace OurTests
         [Fact]
         public void ParseSelect()
         {
-            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 30");
+            var query = MiniSQLParser.Parse("SELECT age,name FROM users WHERE age > 'abra bacadabra'");
 
             Assert.NotNull(query);
             Assert.IsType<Select>(query);
@@ -18,7 +18,50 @@ namespace OurTests
             Assert.Equal(select.Columns, ["age", "name"]);
             Assert.Equal("age", select.Where.ColumnName);
             Assert.Equal(">", select.Where.Operator);
-            Assert.Equal("30", select.Where.LiteralValue);
+            Assert.Equal("abra bacadabra", select.Where.LiteralValue);
+        }
+
+        [Fact]
+        public void ParseDelete()
+        {
+            var query = MiniSQLParser.Parse("DELETE FROM a WHERE age='0'");
+            Assert.NotNull(query);
+            Assert.IsType<Delete>(query);
+
+            Delete delete = (Delete)query;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("age", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("0", delete.Where.LiteralValue);
+
+            var query2 = MiniSQLParser.Parse("DELETE       FROM          a      WHERE      age='0'");
+            Assert.NotNull(query2);
+            Assert.IsType<Delete>(query2);
+
+            delete = (Delete)query2;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("age", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("0", delete.Where.LiteralValue);
+
+            var query3 = MiniSQLParser.Parse("DELETE       FROM          a");
+            Assert.Null(query3);
+
+            var query4 = MiniSQLParser.Parse("DELETE       FROM     a    WHERE nombre='abra bacadabra'");
+            Assert.NotNull(query4);
+            Assert.IsType<Delete>(query4);
+
+            delete = (Delete)query4;
+
+            Assert.Equal("a", delete.Table);
+            Assert.Equal("nombre", delete.Where.ColumnName);
+            Assert.Equal("=", delete.Where.Operator);
+            Assert.Equal("abra bacadabra", delete.Where.LiteralValue);
+
+            var query5 = MiniSQLParser.Parse("DELETE       FROM         WHERE nombre='abra bacadabra'");
+            Assert.Null(query5);
         }
 
         [Fact]
@@ -35,10 +78,10 @@ namespace OurTests
             Assert.Equal(insert.Values, ["Cardinal", "Stavanger", "Norway"]);
         }
 
-        [Fact]
+       [Fact]
         public void ParseCreateTable()
         {
-            var query = MiniSQLParser.Parse("CREATE TABLE manin (name String , edad int)");
+            var query = MiniSQLParser.Parse("CREATE TABLE manin (name TEXT,edad INT)");
 
             Assert.NotNull(query);
             Assert.IsType<CreateTable>(query);
@@ -48,7 +91,7 @@ namespace OurTests
             Assert.Equal("manin", createTable.Table);
             Assert.Equal(2, createTable.ColumnsParameters.Count);
             Assert.Equal("name", createTable.ColumnsParameters[0].Name);
-            Assert.Equal("String", createTable.ColumnsParameters[0].Type.ToString()); 
+            Assert.Equal("String", createTable.ColumnsParameters[0].Type.ToString());
             Assert.Equal("edad", createTable.ColumnsParameters[1].Name);
             Assert.Equal("Int", createTable.ColumnsParameters[1].Type.ToString());
         }
@@ -56,8 +99,7 @@ namespace OurTests
         [Fact]
         public void ParseUpdate()
         {
-            var query = MiniSQLParser.Parse("UPDATE usuarios SET edad = 67, nombre = 'John Pork' WHERE id = 1;");
-
+            var query = MiniSQLParser.Parse("UPDATE usuarios SET edad='67',nombre='John Pork' WHERE id='1';");
             Assert.NotNull(query);
             Assert.IsType<Update>(query);
 
@@ -101,9 +143,21 @@ namespace OurTests
             query = MiniSQLParser.Parse("");
             Assert.Null(query);
         }
+
+        [Fact]
+        public void ParseCreateSecuirityProfile()
+        {
+            var query = MiniSQLParser.Parse("CREATE SECURITY PROFILE a;");
+
+            Assert.NotNull(query);
+            Assert.IsType<CreateSecurityProfile>(query);
+
+            CreateSecurityProfile csp = (CreateSecurityProfile)query;
+
+            Assert.Equal("a", csp.ProfileName);
+        }
     }
 }
-
 
 //⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣠⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣄⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⣤⡶⣾
 //⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⢀⣴⣿⡿⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⡀⢿⣷⢄⠙⣙⢛⣒⣀⣀⣀⣀⣀⣀⣀⡀⡀⡀⡀⡀⣀⣀⢀⡀⡀⣀⣼⢞⣗⣿
