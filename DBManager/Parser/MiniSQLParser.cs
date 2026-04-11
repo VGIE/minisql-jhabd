@@ -30,7 +30,7 @@ namespace DbManager
 
             const string dropSecurityProfilePattern = null;
 
-            const string grantPattern = null;
+            const string grantPattern = @"GRANT\s+(?<privilege>\w+)\s+ON\s+(?<table>\w+)\s+TO\s+(?<profile>\w+)";
 
             const string revokePattern = null;
 
@@ -151,6 +151,17 @@ namespace DbManager
 
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+            match = Regex.Match(miniSQLQuery, grantPattern);
+
+            if (match.Success)
+            {
+                var privilege = match.Groups["privilege"].Value;
+                var table = match.Groups["table"].Value;
+                var profile = match.Groups["profile"].Value;
+
+                return new Grant(privilege, table, profile);
+            }
+
             match = Regex.Match(miniSQLQuery, deletePattern);
 
             if (match.Success)
