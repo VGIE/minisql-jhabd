@@ -28,7 +28,7 @@ namespace DbManager
             //TODO DEADLINE 4
             const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+(?<profile>[a-zA-Z]+)\s*;?\s*$";
 
-            const string dropSecurityProfilePattern = null;
+            const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profile>[a-zA-Z0-9_]+)\s*;?\s*$";
 
             const string grantPattern = @"GRANT\s+(?<privilege>\w+)\s+ON\s+(?<table>\w+)\s+TO\s+(?<profile>\w+)";
 
@@ -196,6 +196,15 @@ namespace DbManager
                 var profile = match.Groups["profile"].Value;
 
                 return new CreateSecurityProfile(profile);
+            }
+
+            match = Regex.Match(miniSQLQuery, dropSecurityProfilePattern);
+
+            if (match.Success)
+            {
+                var profile = match.Groups["profile"].Value;
+
+                return new DropSecurityProfile(profile); 
             }
 
             return null;

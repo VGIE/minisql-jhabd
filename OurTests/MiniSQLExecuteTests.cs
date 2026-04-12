@@ -15,6 +15,12 @@ namespace OurTests
             string result =  tabla.Execute(testDb);
 
             Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
+
+            tabla = new CreateTable(nombre, null);
+
+            result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
         }
 
         [Fact]
@@ -120,7 +126,57 @@ namespace OurTests
 
             Assert.Equal(Constants.DeleteSuccess, result);
         }
+
+        [Fact]
+        public void DropTableErroneoTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+
+            DropTable tabla = new DropTable(nombre);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.TableDoesNotExistError, result);
+        }
+
+        [Fact]
+        public void DropTableTest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+
+            Database testDb = new Database("db", "contraseña");
+
+            CreateTable tablacreada = new CreateTable(nombre, columns);
+
+            String creada = tablacreada.Execute(testDb);
+
+            DropTable tabla = new DropTable(nombre);
+
+            string result = tabla.Execute(testDb);
+
+            Assert.Equal(Constants.DropTableSuccess, result);
+        }
+
+        [Fact]
+        public void ExecuteSelect()
+        {
+            var database = Database.CreateTestDatabase();
+            var table = Table.CreateTestTable();
+            Assert.Equal(table.Select(["Name"], null).ToString(), database.ExecuteMiniSQLQuery("SELECT Name FROM TestTable"));
+            Assert.Equal(Constants.ColumnDoesNotExistError, database.ExecuteMiniSQLQuery("SELECT Namee FROM TestTable"));
+        }
+
+        [Fact]
+        public void ExecuteException()
+        {
+            var database = Database.CreateTestDatabase();
+            Assert.Equal(Constants.SyntaxError, database.ExecuteMiniSQLQuery("SELECT FROM"));
+        }
     }
 }
-
-
