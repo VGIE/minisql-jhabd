@@ -32,7 +32,7 @@ namespace DbManager
 
             const string grantPattern = @"GRANT\s+(?<privilege>\w+)\s+ON\s+(?<table>\w+)\s+TO\s+(?<profile>\w+)";
 
-            const string revokePattern = null;
+            const string revokePattern = @"REVOKE\s+(?<priType>DELETE|INSERT|SELECT|UPDATE)\s+ON\s+(?<tabName>[a-zA-Z0-9]+)\s+TO\s+(?<secProfile>[a-zA-Z]+)$";
 
             const string addUserPattern = null;
 
@@ -160,6 +160,17 @@ namespace DbManager
                 var profile = match.Groups["profile"].Value;
 
                 return new Grant(privilege, table, profile);
+            }
+
+            match = Regex.Match(miniSQLQuery, revokePattern);
+
+            if (match.Success)
+            {
+                var privilege = match.Groups["priType"].Value;
+                var table = match.Groups["tabName"].Value;
+                var profile = match.Groups["secProfile"].Value;
+
+                return new Revoke(privilege, table, profile);
             }
 
             match = Regex.Match(miniSQLQuery, deletePattern);
