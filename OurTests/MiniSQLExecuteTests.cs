@@ -135,6 +135,23 @@ namespace OurTests
 
             Assert.Equal(Constants.TableDoesNotExistError, result);
         }
+
+        [Fact]
+        public void DropTableest()
+        {
+            String nombre = "manin";
+            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
+            CreateTable tablacreada = new CreateTable(nombre,columns);
+            String creada = tablacreada.Execute(testDB)
+
+            DropTable tabla = new DropTable(creada);
+            Database testDb = new Database("db", "contraseña");
+            string result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.DropTableSuccess, result);
+        }
     }
 }
 
