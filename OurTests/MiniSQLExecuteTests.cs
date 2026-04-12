@@ -15,6 +15,12 @@ namespace OurTests
             string result =  tabla.Execute(testDb);
 
             Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
+
+            tabla = new CreateTable(nombre, null);
+
+            result =  tabla.Execute(testDb);
+
+            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
         }
 
         [Fact]
@@ -150,13 +156,27 @@ namespace OurTests
 
             String creada = tablacreada.Execute(testDb);
 
-            DropTable tabla = new DropTable(nombre); 
+            DropTable tabla = new DropTable(nombre);
 
             string result = tabla.Execute(testDb);
 
             Assert.Equal(Constants.DropTableSuccess, result);
         }
+
+        [Fact]
+        public void ExecuteSelect()
+        {
+            var database = Database.CreateTestDatabase();
+            var table = Table.CreateTestTable();
+            Assert.Equal(table.Select(["Name"], null).ToString(), database.ExecuteMiniSQLQuery("SELECT Name FROM TestTable"));
+            Assert.Equal(Constants.ColumnDoesNotExistError, database.ExecuteMiniSQLQuery("SELECT Namee FROM TestTable"));
+        }
+
+        [Fact]
+        public void ExecuteException()
+        {
+            var database = Database.CreateTestDatabase();
+            Assert.Equal(Constants.SyntaxError, database.ExecuteMiniSQLQuery("SELECT FROM"));
+        }
     }
 }
-
-

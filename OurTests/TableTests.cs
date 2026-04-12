@@ -195,5 +195,20 @@ namespace OurTests
             resultTable = table.Select(["asdsadasd"], null);
             Assert.Null(resultTable.GetColumn(0));
         }
+        [Fact]
+        public void DeleteIthRow()
+        {
+            Table table = Table.CreateTestTable();
+            int numRowsAntes = table.NumRows();
+
+            table.DeleteIthRow(0);
+            Assert.Equal(2, table.NumRows());
+
+            table.DeleteIthRow(10);
+            Assert.Equal(2, table.NumRows());
+
+            table.DeleteIthRow(-1);
+            Assert.Equal(2, table.NumRows());
+        }
     }
 }
