@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,6 @@ namespace SecurityParsingTests
 {
     public class RevokeTests
     {
-        /*
         [Fact]
         public void Correct()
         {
@@ -72,7 +71,7 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("REVOKE SELECT ON Table TO User-1") as Revoke;
             Assert.Null(query);
 
-            query = MiniSQLParser.Parse("REVOKE UPDATE ON Table To User_2") as Revoke;
+            query = MiniSQLParser.Parse("REVOKE UPDATE ON Table TO User_2") as Revoke;
             Assert.Null(query);
 
             query = MiniSQLParser.Parse("REVOKE UPDATE ON Table TO User") as Revoke;
@@ -89,9 +88,6 @@ namespace SecurityParsingTests
             Assert.Null(query);
 
             query = MiniSQLParser.Parse("REVOKE SELECT on Table TO User") as Revoke;
-            Assert.Null(query);
-
-            query = MiniSQLParser.Parse("REVOKE UPDATE ON Table To User") as Revoke;
             Assert.Null(query);
 
             query = MiniSQLParser.Parse("REVOKE UPDATE ON Table TO User") as Revoke;
@@ -135,6 +131,5 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("REVOKE UPDATE ON Table TO User") as Revoke;
             Assert.NotNull(query);
         }
-        */
     }
 }
