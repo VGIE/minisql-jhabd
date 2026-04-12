@@ -137,18 +137,22 @@ namespace OurTests
         }
 
         [Fact]
-        public void DropTableest()
+        public void DropTableTest()
         {
             String nombre = "manin";
-            List<ColumnDefinition> columns= new List<ColumnDefinition>();
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "id"));
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "nombre"));
-            CreateTable tablacreada = new CreateTable(nombre,columns);
-            String creada = tablacreada.Execute(testDB)
 
-            DropTable tabla = new DropTable(creada);
             Database testDb = new Database("db", "contraseña");
-            string result =  tabla.Execute(testDb);
+
+            CreateTable tablacreada = new CreateTable(nombre, columns);
+
+            String creada = tablacreada.Execute(testDb);
+
+            DropTable tabla = new DropTable(nombre); 
+
+            string result = tabla.Execute(testDb);
 
             Assert.Equal(Constants.DropTableSuccess, result);
         }
