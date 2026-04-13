@@ -90,6 +90,9 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("REVOKE SELECT on Table TO User") as Revoke;
             Assert.Null(query);
 
+            query = MiniSQLParser.Parse("REVOKE UPDATE ON Table To User") as Revoke;
+            Assert.Null(query);
+
             query = MiniSQLParser.Parse("REVOKE UPDATE ON Table TO User") as Revoke;
             Assert.NotNull(query);
         }
