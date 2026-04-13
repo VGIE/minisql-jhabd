@@ -29,6 +29,5 @@ namespace DbManager
 
             return database.LastErrorMessage;
         }
-
     }
 }
