@@ -6,7 +6,6 @@ using DbManager.Security;
 
 namespace DbManager
 {
- 
     public class AddUser : MiniSqlQuery
     {
         public string Username { get; private set; }
