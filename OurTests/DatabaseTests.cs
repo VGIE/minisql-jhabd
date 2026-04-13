@@ -168,11 +168,23 @@ namespace OurTests
         {
             var database = Database.CreateTestDatabase();
 
+            database.AddTuplesForTesting("TestTable", [
+                ["Rodolfo", "30", "1.80"],
+                ["Maider", "25", "1.65"],
+                ["Rodolfo", "40", "1.75"],
+            ]);
+
             database.DeleteWhere("TestTable", new("Name", "=", "Rodolfo"));
-            Assert.Equal(2, database.Select("TestTable", ["Name", "Age", "Height"], null).NumRows());
+            Assert.Equal(3, database.Select("TestTable", ["Name", "Age", "Height"], null).NumRows());
             Assert.False(database.DeleteWhere("AAAAAAAAA", new("Name", "=", "Maider")));
             Assert.False(database.DeleteWhere("TestTable", new("Address", "=", "Maider")));
             Assert.False(database.DeleteWhere("TestTable", null));
+
+            database.CheckForTesting("TestTable", [
+                ["Maider", "67", "1.67"],
+                ["Maider", "25", "1.65"],
+                ["Pepe", "51", "1.55"]
+            ]);
         }
 
         [Fact]
