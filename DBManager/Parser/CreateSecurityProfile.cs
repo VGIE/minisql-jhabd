@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DbManager.Parser;
+using DbManager.Security;
 
 namespace DbManager
 {
- 
     public class CreateSecurityProfile : MiniSqlQuery
     {
         public string ProfileName { get; set; }
@@ -20,7 +20,12 @@ namespace DbManager
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, CreateSecurityProfileSuccess
-            return null;
+            if (!database.IsUserAdmin())
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
+            database.SecurityManager.AddProfile(new() { Name = ProfileName });
+
+            return Constants.CreateSecurityProfileSuccess;
         }
     }
 }

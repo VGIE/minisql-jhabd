@@ -13,7 +13,6 @@ namespace DbManager
         public string Password { get; private set; }
         public string ProfileName { get; private set; }
 
-
         public AddUser(string username, string password, string profileName)
         {
             //TODO DEADLINE 4: Initialize member variables
@@ -21,14 +20,20 @@ namespace DbManager
             Password = password;
             ProfileName = profileName;
         }
+
         public string Execute(Database database)
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, AddUserSuccess
-            
-            return null;
-            
-        }
+            if (database.SecurityManager.ProfileByName(ProfileName) == null)
+                return Constants.SecurityProfileDoesNotExistError;
 
+            if(!database.IsUserAdmin())
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
+            database.SecurityManager.ProfileByName(ProfileName).Users.Add(new (Username, Password));
+
+            return Constants.AddUserSuccess;
+        }
     }
 }
