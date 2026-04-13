@@ -340,7 +340,18 @@ namespace DbManager
                     }
                 }
 
-                return db;
+                db.m_username = username;
+
+                db.SecurityManager = Manager.Load(databaseName, username);
+
+                if (db.SecurityManager != null && db.SecurityManager.IsPasswordCorrect(username, password))
+                {
+                    return db; 
+                }
+                else
+                {
+                    return null; 
+                }
             }
             catch (Exception)
             {
