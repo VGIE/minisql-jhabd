@@ -26,7 +26,7 @@ namespace DbManager
             //DEADLINE 1.B: Initalize the member variables
             m_username = adminUsername;
             Manager m = new(adminUsername);
-            m.AddProfile(new() { Name = "admin", Users = [new(adminUsername, adminPassword)] });
+            m.AddProfile(new() { Name = Profile.AdminProfileName, Users = [new(adminUsername, adminPassword)] });
             SecurityManager = m;
             LastErrorMessage = "";
         }
