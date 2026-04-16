@@ -24,12 +24,11 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
-            this.m_username = adminUsername;
-            Manager m = new Manager(adminUsername);
-            this.SecurityManager = m;
-            this.LastErrorMessage = "";
-
-
+            m_username = adminUsername;
+            Manager m = new(adminUsername);
+            m.AddProfile(new() { Name = "admin", Users = [new(adminUsername, adminPassword)] });
+            SecurityManager = m;
+            LastErrorMessage = "";
         }
 
         public bool AddTable(Table table)
@@ -47,16 +46,12 @@ namespace DbManager
         public Table TableByName(string tableName)
         {
             //DEADLINE 1.B: Find and return the table with the given name
-            Table t = null;
             foreach (Table table in Tables)
             {
                 if (table.Name == tableName)
-                {
-                    t = table;
-                }
+                    return table;
             }
-
-            return t;
+            return null;
         }
 
         public bool CreateTable(string tableName, List<ColumnDefinition> ColumnDefinition)

@@ -195,11 +195,11 @@ namespace OurTests
             resultTable = table.Select(["asdsadasd"], null);
             Assert.Null(resultTable.GetColumn(0));
         }
+
         [Fact]
         public void DeleteIthRow()
         {
-            Table table = Table.CreateTestTable();
-            int numRowsAntes = table.NumRows();
+            var table = Table.CreateTestTable();
 
             table.DeleteIthRow(0);
             Assert.Equal(2, table.NumRows());
