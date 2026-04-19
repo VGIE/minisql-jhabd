@@ -11,7 +11,6 @@ namespace SecurityParsingTests
 {
     public class GrantTests
     {
-        /*
         [Fact]
         public void Correct()
         {
@@ -135,6 +134,5 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("GRANT DELETE ON Table TO User") as Grant;
             Assert.NotNull(query);
         }
-        */
     }
 }
