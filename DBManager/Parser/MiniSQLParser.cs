@@ -34,9 +34,9 @@ namespace DbManager
 
             const string revokePattern = @"REVOKE\s+(?<priType>DELETE|INSERT|SELECT|UPDATE)\s+ON\s+(?<tabName>[a-zA-Z0-9]+)\s+TO\s+(?<secProfile>[a-zA-Z]+)$";
 
-            const string addUserPattern = null;
+            const string addUserPattern = @"^ADD\s+USER\s+(?<username>\w+)\s+(?<password>\w+)\s+(?<profile>\w+)\s*;?\s*$";
 
-            const string deleteUserPattern = null;
+            const string deleteUserPattern = @"^DELETE\s+USER\s+(?<username>\w+)\s*;?\s*$";
 
 
             //TODO DEADLINE 2
@@ -44,6 +44,8 @@ namespace DbManager
             //For example, if the query is a "SELECT ...", there should be a match with selectPattern. We would create and return an instance of Select
             //initialized with the table name, the columns, and (possibly) an instance of Condition.
             //If there is no match, it means there is a syntax error. We will return null.
+
+
             if (miniSQLQuery == null)
                 return null;
 
@@ -205,6 +207,26 @@ namespace DbManager
                 var profile = match.Groups["profile"].Value;
 
                 return new DropSecurityProfile(profile); 
+            }
+
+            match = Regex.Match(miniSQLQuery, addUserPattern);
+
+            if (match.Success)
+            {
+                var username = match.Groups["username"].Value;
+                var password = match.Groups["password"].Value;
+                var profile = match.Groups["profile"].Value;
+
+                return new AddUser(username, password, profile);
+            }
+
+            match = Regex.Match(miniSQLQuery, deleteUserPattern);
+
+            if (match.Success)
+            {
+                var username = match.Groups["username"].Value;
+
+                return new DeleteUser(username);
             }
 
             return null;
