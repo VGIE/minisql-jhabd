@@ -30,7 +30,7 @@ namespace DbManager
 
             const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+(?<profile>[a-zA-Z0-9_]+)\s*;?\s*$";
 
-            const string grantPattern = @"GRANT\s+(?<privilege>\w+)\s+ON\s+(?<table>\w+)\s+TO\s+(?<profile>\w+)";
+            const string grantPattern = @"GRANT\s+(?<privilege>DELETE|INSERT|SELECT|UPDATE)\s+ON\s+(?<table>[a-zA-Z0-9]+)\s+TO\s+(?<profile>[a-zA-Z]+)$";
 
             const string revokePattern = @"REVOKE\s+(?<priType>DELETE|INSERT|SELECT|UPDATE)\s+ON\s+(?<tabName>[a-zA-Z0-9]+)\s+TO\s+(?<secProfile>[a-zA-Z]+)$";
 
