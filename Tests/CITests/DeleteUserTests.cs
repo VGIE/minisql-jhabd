@@ -11,7 +11,6 @@ namespace SecurityParsingTests
 {
     public class DeleteUserTests
     {
-        /*
         [Fact]
         public void Correct()
         {
@@ -70,6 +69,5 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("DELETE USER User") as DeleteUser;
             Assert.NotNull(query);
         }
-        */
     }
 }

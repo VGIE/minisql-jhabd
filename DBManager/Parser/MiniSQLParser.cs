@@ -34,9 +34,9 @@ namespace DbManager
 
             const string revokePattern = @"REVOKE\s+(?<priType>DELETE|INSERT|SELECT|UPDATE)\s+ON\s+(?<tabName>[a-zA-Z0-9]+)\s+TO\s+(?<secProfile>[a-zA-Z]+)$";
 
-            const string addUserPattern = @"^ADD\s+USER\s+(?<username>\w+)\s+(?<password>\w+)\s+(?<profile>\w+)\s*;?\s*$";
+            const string addUserPattern = @"^ADD\s+USER\s*\(\s*(?<username>[a-zA-Z]+)\s*,\s*(?<password>\w+)\s*,\s*(?<profile>[a-zA-Z]+)\s*\)\s*;?\s*$";
 
-            const string deleteUserPattern = @"^DELETE\s+USER\s+(?<username>\w+)\s*;?\s*$";
+            const string deleteUserPattern = @"^DELETE\s+USER\s*(?<username>[a-zA-Z]+)\s*;?\s*$";
 
 
             //TODO DEADLINE 2
