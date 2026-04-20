@@ -61,22 +61,28 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Add this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-
+            if (!IsUserAdmin()) return;
+            Profile profile = ProfileByName(profileName);
+            if (profile == null) return;
+            profile.GrantPrivilege(table, privilege);
         }
 
         public void RevokePrivilege(string profileName, string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-
+            if (!IsUserAdmin()) return;
+            Profile profile = ProfileByName(profileName);
+            if (profile == null) return;
+            profile.RevokePrivilege(table, privilege);
         }
 
         public bool IsGrantedPrivilege(string username, string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Return true if the username has this privilege on this table. False otherwise (also in case of error)
-
-            return false;
-
+            Profile profile = ProfileByUser(username);
+            if (profile == null) return false;
+            return profile.IsGrantedPrivilege(table, privilege);
         }
 
         public void AddProfile(Profile profile)
@@ -143,8 +149,11 @@ namespace DbManager.Security
         public bool RemoveProfile(string profileName)
         {
             //TODO DEADLINE 5: Remove this profile
-
-            return false;
+            if (!IsUserAdmin()) return false;
+            Profile profile = ProfileByName(profileName);
+            if (profile == null) return false;
+            Profiles.Remove(profile);
+            return true;
         }
 
         public static Manager Load(string databaseName, string username)
