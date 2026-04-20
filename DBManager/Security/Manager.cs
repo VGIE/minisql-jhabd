@@ -136,7 +136,25 @@ namespace DbManager.Security
         public void Save(string databaseName)
         {
             //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
-            
+            string filePath = databaseName + "_Security.txt";
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine(Profiles.Count);
+
+                foreach (Profile profile in Profiles)
+                {
+                    writer.WriteLine(profile.Name);
+
+                    writer.WriteLine(profile.Users.Count);
+
+                    foreach (User user in profile.Users)
+                    {
+                        writer.WriteLine(user.Username);
+                        writer.WriteLine(user.EncryptedPassword); 
+                    }
+                }
+            }
         }
     }
 }
