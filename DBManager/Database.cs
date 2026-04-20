@@ -35,10 +35,11 @@ namespace DbManager
         {
             //DEADLINE 1.B: Add a new table to the database
             if (table != null)
-            {
-                Tables.Add(table);
-                return true;
-            }
+                if (table != null)
+                {
+                    Tables.Add(table);
+                    return true;
+                }
 
             return false;
         }
@@ -121,9 +122,11 @@ namespace DbManager
             foreach (Table tabla in Tables)
             {
                 if (tabla.Name == tableName)
-                {
-                    tablaEncontrada = tabla;
-                }
+                    if (tabla.Name == tableName)
+                    {
+                        tablaEncontrada = tabla;
+                        tablaEncontrada = tabla;
+                    }
             }
 
             if (tablaEncontrada == null)
@@ -280,9 +283,9 @@ namespace DbManager
                 {
                     SecurityManager.Save(databaseName);
                 }
+
                 return true;
             }
-
             catch (Exception)
             {
                 return false;
@@ -336,16 +339,15 @@ namespace DbManager
                 }
 
                 db.m_username = username;
-
-                db.SecurityManager = Manager.Load(databaseName, username);
+                db.SecurityManager = DbManager.Security.Manager.Load(databaseName, username);
 
                 if (db.SecurityManager != null && db.SecurityManager.IsPasswordCorrect(username, password))
                 {
-                    return db; 
+                    return db;
                 }
                 else
                 {
-                    return null; 
+                    return null;
                 }
             }
             catch (Exception)
