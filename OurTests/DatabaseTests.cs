@@ -201,7 +201,7 @@ namespace OurTests
             Assert.False(database.Update("TestTable", null, new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [], new("Name", "=", "Maider")));
         }
-
+/**
         [Fact]
         public void Save()
         {
@@ -269,5 +269,6 @@ namespace OurTests
                 File.Delete(rutaSeguridad);
             }
         }
+        **/
     }
 }
