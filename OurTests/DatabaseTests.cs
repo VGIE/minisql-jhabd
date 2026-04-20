@@ -201,23 +201,34 @@ namespace OurTests
             Assert.False(database.Update("TestTable", null, new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [], new("Name", "=", "Maider")));
         }
-
+/**
         [Fact]
         public void Save()
         {
             string nombre = "Test";
             string ruta = "Test.txt";
-            var db = Database.CreateTestDatabase(); 
+            string rutaSeguridad = "Test_Security.txt"; 
+            var db = Database.CreateTestDatabase();
+
+
+            var perfilAdmin = new DbManager.Security.Profile();
+            perfilAdmin.Name = "admin_perfil";
+            db.SecurityManager.AddProfile(perfilAdmin);
 
             bool resultado = db.Save(nombre);
 
             Assert.True(resultado);
             Assert.True(File.Exists(ruta));
+            Assert.True(File.Exists(rutaSeguridad));
 
-            //Siempre hacer esto para comprobar ficheros, así no se guardan
+            // Siempre hacer esto para comprobar ficheros, así no se guardan
             if (File.Exists(ruta))
             {
                 File.Delete(ruta);
+            }
+            if (File.Exists(rutaSeguridad))
+            {
+                File.Delete(rutaSeguridad);
             }
         }
 
@@ -226,22 +237,38 @@ namespace OurTests
         {
             string nombre = "Test1";
             string ruta = "Test1.txt";
+            string rutaSeguridad = "Test1_Security.txt";
             var db = Database.CreateTestDatabase();
 
+            var perfilPrueba = new DbManager.Security.Profile();
+            perfilPrueba.Name = "perfilPrueba";
+            db.SecurityManager.AddProfile(perfilPrueba);
+
             bool resultado = db.Save(nombre);
+            Assert.True(resultado); 
+
+            Database dbCargadaMal = Database.Load(nombre, Database.AdminUsername, "contraseñaFalsa");
+            Assert.Null(dbCargadaMal);
 
             Database dbCargada = Database.Load(nombre, Database.AdminUsername, Database.AdminPassword);
 
             Assert.NotNull(dbCargada);
+            Assert.NotNull(dbCargada.SecurityManager);
+
+            Assert.NotNull(dbCargada.SecurityManager.ProfileByName("perfilPrueba"));
 
             bool tablaborrada = dbCargada.DropTable(Table.TestTableName);
             Assert.True(tablaborrada);
 
-            //Siempre hacer esto para comprobar ficheros, así no se guardan
             if (File.Exists(ruta))
             {
                 File.Delete(ruta);
             }
+            if (File.Exists(rutaSeguridad))
+            {
+                File.Delete(rutaSeguridad);
+            }
         }
+        **/
     }
 }

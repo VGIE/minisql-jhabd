@@ -26,7 +26,7 @@ namespace DbManager
             //DEADLINE 1.B: Initalize the member variables
             m_username = adminUsername;
             Manager m = new(adminUsername);
-            m.AddProfile(new() { Name = "admin", Users = [new(adminUsername, adminPassword)] });
+            m.AddProfile(new() { Name = Profile.AdminProfileName, Users = [new(adminUsername, adminPassword)] });
             SecurityManager = m;
             LastErrorMessage = "";
         }
@@ -34,11 +34,12 @@ namespace DbManager
         public bool AddTable(Table table)
         {
             //DEADLINE 1.B: Add a new table to the database
-            if(table != null)
-            {
-                Tables.Add(table);
-                return true;
-            }
+            if (table != null)
+                if (table != null)
+                {
+                    Tables.Add(table);
+                    return true;
+                }
 
             return false;
         }
@@ -61,15 +62,15 @@ namespace DbManager
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
 
-            if(ColumnDefinition == null || ColumnDefinition.Count == 0)
+            if (ColumnDefinition == null || ColumnDefinition.Count == 0)
             {
                 LastErrorMessage = Constants.DatabaseCreatedWithoutColumnsError;
                 return false;
             }
 
-            foreach(Table tabla in Tables)
+            foreach (Table tabla in Tables)
             {
-                if(tabla.Name==tableName)
+                if (tabla.Name == tableName)
                 {
                     LastErrorMessage = Constants.TableAlreadyExistsError;
                     return false;
@@ -77,7 +78,7 @@ namespace DbManager
             }
 
             LastErrorMessage = Constants.CreateTableSuccess;
-            Table nueva = new Table(tableName,ColumnDefinition);
+            Table nueva = new Table(tableName, ColumnDefinition);
             Tables.Add(nueva);
             return true;
 
@@ -90,15 +91,15 @@ namespace DbManager
 
             Table tablaEliminada = null;
 
-            foreach(Table tabla in Tables)
+            foreach (Table tabla in Tables)
             {
-                if(tabla.Name==tableName)
+                if (tabla.Name == tableName)
                 {
                     tablaEliminada = tabla;
                 }
             }
 
-            if(tablaEliminada==null)
+            if (tablaEliminada == null)
             {
                 LastErrorMessage = Constants.TableDoesNotExistError;
                 return false;
@@ -118,15 +119,17 @@ namespace DbManager
 
             Table tablaEncontrada = null;
 
-            foreach(Table tabla in Tables)
+            foreach (Table tabla in Tables)
             {
-                if(tabla.Name==tableName)
-                {
-                  tablaEncontrada = tabla;
-                }
+                if (tabla.Name == tableName)
+                    if (tabla.Name == tableName)
+                    {
+                        tablaEncontrada = tabla;
+                        tablaEncontrada = tabla;
+                    }
             }
 
-            if(tablaEncontrada==null)
+            if (tablaEncontrada == null)
             {
                 LastErrorMessage = Constants.TableDoesNotExistError;
                 return false;
@@ -251,33 +254,38 @@ namespace DbManager
             //If everything goes ok, return true, false otherwise.
             //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
             try
+            {
+                string filePath = databaseName + ".txt";
+
+                using (StreamWriter writer = new StreamWriter(filePath))
                 {
-                    string filePath = databaseName + ".txt";
+                    writer.WriteLine(Tables.Count);
 
-                    using (StreamWriter writer = new StreamWriter(filePath))
+                    foreach (Table table in Tables)
                     {
-                        writer.WriteLine(Tables.Count);
+                        writer.WriteLine(table.Name);
 
-                        foreach (Table table in Tables)
+                        writer.WriteLine(table.NumColumns());
+                        for (int i = 0; i < table.NumColumns(); i++)
                         {
-                            writer.WriteLine(table.Name);
+                            writer.WriteLine(table.GetColumn(i).AsText());
+                        }
 
-                            writer.WriteLine(table.NumColumns());
-                            for (int i = 0; i < table.NumColumns(); i++)
-                            {
-                                writer.WriteLine(table.GetColumn(i).AsText());
-                            }
-
-                            writer.WriteLine(table.NumRows());
-                            for (int i = 0; i < table.NumRows(); i++)
-                            {
-                                writer.WriteLine(table.GetRow(i).AsText());
-                            }
+                        writer.WriteLine(table.NumRows());
+                        for (int i = 0; i < table.NumRows(); i++)
+                        {
+                            writer.WriteLine(table.GetRow(i).AsText());
                         }
                     }
-                    return true;
                 }
 
+                if (SecurityManager != null)
+                {
+                    SecurityManager.Save(databaseName);
+                }
+
+                return true;
+            }
             catch (Exception)
             {
                 return false;
@@ -291,47 +299,57 @@ namespace DbManager
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
             try
+            {
+                string filePath = databaseName + ".txt";
+
+                if (!File.Exists(filePath))
                 {
-                    string filePath = databaseName + ".txt";
-
-                    if (!File.Exists(filePath))
-                    {
-                        return null;
-                    }
-
-                    Database db = new Database();
-
-                    using (StreamReader reader = new StreamReader(filePath))
-                    {
-                        int numberOfTables = int.Parse(reader.ReadLine());
-
-                        for (int t = 0; t < numberOfTables; t++)
-                        {
-                            string tableName = reader.ReadLine();
-
-                            int numColumns = int.Parse(reader.ReadLine());
-                            List<ColumnDefinition> columns = new List<ColumnDefinition>();
-                            for (int c = 0; c < numColumns; c++)
-                            {
-                                string columnText = reader.ReadLine();
-                                columns.Add(ColumnDefinition.Parse(columnText));
-                            }
-
-                            Table newTable = new Table(tableName, columns);
-
-                            int numRows = int.Parse(reader.ReadLine());
-                            for (int r = 0; r < numRows; r++)
-                            {
-                                string rowText = reader.ReadLine();
-                                newTable.AddRow(Row.Parse(columns, rowText));
-                            }
-
-                            db.Tables.Add(newTable);
-                        }
-                    }
-
-                    return db; 
+                    return null;
                 }
+
+                Database db = new Database();
+
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    int numberOfTables = int.Parse(reader.ReadLine());
+
+                    for (int t = 0; t < numberOfTables; t++)
+                    {
+                        string tableName = reader.ReadLine();
+
+                        int numColumns = int.Parse(reader.ReadLine());
+                        List<ColumnDefinition> columns = new List<ColumnDefinition>();
+                        for (int c = 0; c < numColumns; c++)
+                        {
+                            string columnText = reader.ReadLine();
+                            columns.Add(ColumnDefinition.Parse(columnText));
+                        }
+
+                        Table newTable = new Table(tableName, columns);
+
+                        int numRows = int.Parse(reader.ReadLine());
+                        for (int r = 0; r < numRows; r++)
+                        {
+                            string rowText = reader.ReadLine();
+                            newTable.AddRow(Row.Parse(columns, rowText));
+                        }
+
+                        db.Tables.Add(newTable);
+                    }
+                }
+
+                db.m_username = username;
+                db.SecurityManager = DbManager.Security.Manager.Load(databaseName, username);
+
+                if (db.SecurityManager != null && db.SecurityManager.IsPasswordCorrect(username, password))
+                {
+                    return db;
+                }
+                else
+                {
+                    return null;
+                }
+            }
             catch (Exception)
             {
                 return null;
