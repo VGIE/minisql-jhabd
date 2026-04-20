@@ -22,7 +22,9 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Return true if the user logged-in (m_username) is the admin, false otherwise
 
-            if (ProfileByUser(m_username).Name == "Admin")
+            Profile userProfile = ProfileByUser(m_username);
+
+            if (userProfile != null && userProfile.Name == "Admin")
             {
                 return true;
             }
