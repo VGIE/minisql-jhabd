@@ -80,9 +80,13 @@ namespace DbManager.Security
         public void AddProfile(Profile profile)
         {
             //TODO DEADLINE 5: Add this profile
-            if (profile != null)
+            
+            if (IsUserAdmin()) 
             {
-                Profiles.Add(profile);
+                if (profile != null)
+                {
+                    Profiles.Add(profile);
+                }
             }
         }
 
