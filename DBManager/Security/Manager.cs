@@ -22,7 +22,7 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Return true if the user logged-in (m_username) is the admin, false otherwise
 
-            if ( ProfileByUser(m_username).Name == "Admin")
+            if (ProfileByUser(m_username).Name == "Admin")
             {
                 return true;
             }
@@ -59,28 +59,28 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Add this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-            
+
         }
 
         public void RevokePrivilege(string profileName, string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-            
+
         }
 
         public bool IsGrantedPrivilege(string username, string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Return true if the username has this privilege on this table. False otherwise (also in case of error)
-            
+
             return false;
-            
+
         }
 
         public void AddProfile(Profile profile)
         {
             //TODO DEADLINE 5: Add this profile
-            if(profile != null)
+            if (profile != null)
             {
                 Profiles.Add(profile);
             }
@@ -89,7 +89,7 @@ namespace DbManager.Security
         public User UserByName(string username)
         {
             //TODO DEADLINE 5: Return the user by name. If it doesn't exist, return null
-             foreach (Profile profile in Profiles)
+            foreach (Profile profile in Profiles)
             {
                 foreach (User user in profile.Users)
                 {
@@ -105,37 +105,76 @@ namespace DbManager.Security
         public Profile ProfileByName(string profileName)
         {
             //TODO DEADLINE 5: Return the profile by name. If it doesn't exist, return null
-            
+
             return null;
-            
+
         }
 
         public Profile ProfileByUser(string username)
         {
             //TODO DEADLINE 5: Return the profile by user. If the user doesn't exist, return null
-            
+
             return null;
-            
+
         }
 
         public bool RemoveProfile(string profileName)
         {
             //TODO DEADLINE 5: Remove this profile
-            
+
             return false;
         }
 
         public static Manager Load(string databaseName, string username)
         {
             //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
-            
-            return null;
-            
+
+            Manager manager = new Manager(username);
+            string filePath = databaseName + "_Security.txt";
+
+            if (!File.Exists(filePath))
+            {
+                return manager;
+            }
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    int numProfiles = int.Parse(reader.ReadLine());
+
+                    for (int p = 0; p < numProfiles; p++)
+                    {
+                        Profile profile = new Profile();
+                        profile.Name = reader.ReadLine();
+
+                        int numUsers = int.Parse(reader.ReadLine());
+
+                        for (int u = 0; u < numUsers; u++)
+                        {
+                            string uname = reader.ReadLine();
+                            string encryptedPass = reader.ReadLine();
+
+                            User user = new User(uname, "");
+                            user.EncryptedPassword = encryptedPass;
+
+                            profile.Users.Add(user);
+                        }
+                        manager.Profiles.Add(profile);
+                    }
+                }
+                return manager;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public void Save(string databaseName)
         {
             //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
+
             string filePath = databaseName + "_Security.txt";
 
             using (StreamWriter writer = new StreamWriter(filePath))
@@ -151,7 +190,7 @@ namespace DbManager.Security
                     foreach (User user in profile.Users)
                     {
                         writer.WriteLine(user.Username);
-                        writer.WriteLine(user.EncryptedPassword); 
+                        writer.WriteLine(user.EncryptedPassword);
                     }
                 }
             }
