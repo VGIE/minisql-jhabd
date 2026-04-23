@@ -196,6 +196,22 @@ namespace DbManager.Security
 
                             profile.Users.Add(user);
                         }
+
+                        int numTablasConPrivilegios = int.Parse(reader.ReadLine());
+
+                        for (int t = 0; t < numTablasConPrivilegios; t++)
+                        {
+                            string nombreTabla = reader.ReadLine();
+                            int numPrivilegios = int.Parse(reader.ReadLine());
+
+                            for (int pr = 0; pr < numPrivilegios; pr++)
+                            {
+                                string nombrePrivilegio = reader.ReadLine();
+
+                                Privilege privilegioCargado = (Privilege)Enum.Parse(typeof(Privilege), nombrePrivilegio);
+                                profile.GrantPrivilege(nombreTabla, privilegioCargado);
+                            }
+                        }
                         manager.Profiles.Add(profile);
                     }
                 }
