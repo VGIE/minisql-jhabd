@@ -228,6 +228,19 @@ namespace DbManager.Security
                         writer.WriteLine(user.Username);
                         writer.WriteLine(user.EncryptedPassword);
                     }
+
+                    writer.WriteLine(profile.PrivilegesOn.Count);
+
+                    foreach (var tablaYPrivilegios in profile.PrivilegesOn)
+                    {
+                        writer.WriteLine(tablaYPrivilegios.Key); 
+                        writer.WriteLine(tablaYPrivilegios.Value.Count); 
+
+                        foreach (Privilege privilegio in tablaYPrivilegios.Value)
+                        {
+                            writer.WriteLine(privilegio.ToString());
+                        }
+                    }
                 }
             }
         }
