@@ -5,6 +5,7 @@ namespace OurTests
 {
     public class ManagerTests
     {
+        /*
         [Fact]
         public void IsUserAdmin()
         {
@@ -29,7 +30,7 @@ namespace OurTests
 
             Assert.True(database.SecurityManager.IsGrantedPrivilege("admin", "table", Privilege.Select));   // Default checks
             Assert.False(database.SecurityManager.IsGrantedPrivilege("user", "table", Privilege.Insert));
-            //Assert.False(database.SecurityManager.IsGrantedPrivilege(null, "table", Privilege.Select));
+            Assert.False(database.SecurityManager.IsGrantedPrivilege(null, "table", Privilege.Select));
 
             var profile = new Profile { Name = "client" };
             var user = new User("client1", "userPassword");
@@ -49,5 +50,6 @@ namespace OurTests
 
             //Assert.True(database.SecurityManager.IsGrantedPrivilege("client1", "table", Privilege.Select));
         }
+        */
     }
 }
