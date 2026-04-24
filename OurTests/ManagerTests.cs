@@ -5,7 +5,6 @@ namespace OurTests
 {
     public class ManagerTests
     {
-        /*
         [Fact]
         public void IsUserAdmin()
         {
@@ -22,7 +21,7 @@ namespace OurTests
             Assert.False(new Manager("user").IsUserAdmin());
             Assert.False(new Manager(null).IsUserAdmin());
         }
-
+        /*
         [Fact]
         public void PrivilegeTests()
         {
