@@ -21,7 +21,7 @@ namespace OurTests
             Assert.False(new Manager("user").IsUserAdmin());
             Assert.False(new Manager(null).IsUserAdmin());
         }
-        /*
+
         [Fact]
         public void PrivilegeTests()
         {
@@ -54,6 +54,5 @@ namespace OurTests
 
             Assert.True(database.SecurityManager.IsGrantedPrivilege("client1", "TestTable", Privilege.Select));
         }
-        */
     }
 }
