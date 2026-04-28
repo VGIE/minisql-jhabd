@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DbManager
 {
@@ -14,20 +11,14 @@ namespace DbManager
             //TODO DEADLINE 2: Initialize member variables
             this.Table = table;
             this.Where = where;
-            
         }
 
         public string Execute(Database database)
         {
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //DeleteSuccess or the last error in the database
-
             database.DeleteWhere(Table,Where);
 
-            if (string.IsNullOrEmpty(database.LastErrorMessage))
-            {
-                return Constants.DeleteSuccess;
-            }
             return database.LastErrorMessage;
         }
     }

@@ -18,10 +18,7 @@ namespace DbManager
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //InsertSuccess or the last error in the database
             database.Insert(Table, Values);
-            if (string.IsNullOrEmpty(database.LastErrorMessage))
-            {
-                return Constants.InsertSuccess;
-            }
+
             return database.LastErrorMessage;
         }
     }
