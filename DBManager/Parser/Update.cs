@@ -22,10 +22,7 @@ namespace DbManager
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //UpdateSuccess or the last error in the database
             database.Update(Table, Columns, Where);
-            if (string.IsNullOrEmpty(database.LastErrorMessage))
-            {
-                return Constants.UpdateSuccess;
-            }
+
             return database.LastErrorMessage;
         }
     }

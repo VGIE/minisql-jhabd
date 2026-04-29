@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using DbManager.Parser;
 
 namespace DbManager
 {
- 
+
     public class CreateTable : MiniSqlQuery
     {
         public string Table { get; private set; }
@@ -28,11 +25,6 @@ namespace DbManager
             else
             {
                 database.CreateTable(Table,ColumnsParameters);
-
-                if (string.IsNullOrEmpty(database.LastErrorMessage))
-                {
-                    return Constants.CreateTableSuccess;
-                }
 
                 return database.LastErrorMessage;
             }
