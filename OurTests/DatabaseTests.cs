@@ -269,6 +269,13 @@ namespace OurTests
                 File.Delete(rutaSeguridad);
             }
         }
-        
+
+        [Fact]
+        public void IsUserAdmin()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.True(database.IsUserAdmin());
+        }
     }
 }
