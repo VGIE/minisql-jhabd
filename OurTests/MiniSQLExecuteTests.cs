@@ -178,5 +178,16 @@ namespace OurTests
             var database = Database.CreateTestDatabase();
             Assert.Equal(Constants.SyntaxError, database.ExecuteMiniSQLQuery("SELECT FROM"));
         }
+
+        [Fact]
+        public void ExecuteUpdate()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.Equal(Constants.UpdateSuccess, database.ExecuteMiniSQLQuery("UPDATE TestTable SET Name='Walter' WHERE Age>'30'"));
+            Assert.Equal(Constants.ColumnDoesNotExistError, database.ExecuteMiniSQLQuery("UPDATE TestTable SET Name='Walter' WHERE A>'30'"));
+            Assert.Equal(Constants.TableDoesNotExistError, database.ExecuteMiniSQLQuery("UPDATE TestTablee SET Name='Walter' WHERE Age>'30'"));
+            Assert.Equal(Constants.SyntaxError, database.ExecuteMiniSQLQuery("UPDATE TestTable SET Name='Walter' WHERE Age>'30' AND"));
+        }
     }
 }
