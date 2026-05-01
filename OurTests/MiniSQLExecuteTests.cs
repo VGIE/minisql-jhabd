@@ -1,4 +1,5 @@
 using DbManager;
+using DbManager.Security;
 
 namespace OurTests
 {
@@ -188,6 +189,56 @@ namespace OurTests
             Assert.Equal(Constants.ColumnDoesNotExistError, database.ExecuteMiniSQLQuery("UPDATE TestTable SET Name='Walter' WHERE A>'30'"));
             Assert.Equal(Constants.TableDoesNotExistError, database.ExecuteMiniSQLQuery("UPDATE TestTablee SET Name='Walter' WHERE Age>'30'"));
             Assert.Equal(Constants.SyntaxError, database.ExecuteMiniSQLQuery("UPDATE TestTable SET Name='Walter' WHERE Age>'30' AND"));
+        }
+
+        [Fact]
+        public void ExecuteAddUser()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.SecurityManager.AddProfile(new() { Name = "Profile" });
+            database.SecurityManager.ProfileByName("Profile").Users.Add(new("Client", "Password"));
+
+            Assert.Equal(Constants.AddUserSuccess, database.ExecuteMiniSQLQuery("ADD USER (Walter, Password, Profile)"));
+            Assert.Equal(Constants.SecurityProfileDoesNotExistError, database.ExecuteMiniSQLQuery("ADD USER (Walter, Password, NonExistentProfile)"));
+
+            database.Save("AddUserTest");
+            database = Database.Load("AddUserTest", "Client", "Password");
+
+            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, database.ExecuteMiniSQLQuery("ADD USER (Walter, Password, Profile)"));
+        }
+
+        [Fact]
+        public void ExecuteDeleteUser()
+        {
+            var database = Database.CreateTestDatabase();
+
+            database.SecurityManager.AddProfile(new() { Name = "Profile" });
+            database.SecurityManager.ProfileByName("Profile").Users.Add(new("ClientA", "Password"));
+            database.SecurityManager.ProfileByName("Profile").Users.Add(new("ClientB", "Password"));
+
+            Assert.Equal(Constants.DeleteUserSuccess, database.ExecuteMiniSQLQuery("DELETE USER ClientB"));
+            Assert.Equal(Constants.UserDoesNotExistError, database.ExecuteMiniSQLQuery("DELETE USER A"));
+
+            database.Save("DeleteUserTest");
+            database = Database.Load("DeleteUserTest", "ClientA", "Password");
+
+            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, database.ExecuteMiniSQLQuery("DELETE USER ClientA"));
+        }
+
+        [Fact]
+        public void ExecuteCreateSecurityProfile()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.Equal(Constants.CreateSecurityProfileSuccess, database.ExecuteMiniSQLQuery("CREATE SECURITY PROFILE Profile"));
+
+            database.SecurityManager.ProfileByName("Profile").Users.Add(new("Client", "Password"));
+
+            database.Save("CreateSecurityProfileTest");
+            database = Database.Load("CreateSecurityProfileTest", "Client", "Password");
+
+            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, database.ExecuteMiniSQLQuery("CREATE SECURITY PROFILE AnotherProfile"));
         }
     }
 }
