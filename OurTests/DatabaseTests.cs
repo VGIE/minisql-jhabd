@@ -268,6 +268,8 @@ namespace OurTests
             {
                 File.Delete(rutaSeguridad);
             }
+
+            Assert.Null(Database.Load(nombre, Database.AdminUsername, Database.AdminPassword));
         }
 
         [Fact]
@@ -276,6 +278,18 @@ namespace OurTests
             var database = Database.CreateTestDatabase();
 
             Assert.True(database.IsUserAdmin());
+        }
+
+        [Fact]
+        public void DatabaseSaveLoadException()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.False(database.Save("!·$%&/()=?¿"));
+
+            File.WriteAllText("DoofenshmirtzSL" + ".txt", "A");
+
+            Assert.Null(Database.Load("DoofenshmirtzSL", "admin", "admin"));
         }
     }
 }
