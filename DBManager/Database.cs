@@ -225,6 +225,13 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
+
+            if (!SecurityManager.IsGrantedPrivilege(m_username, tableName, Privilege.Update))
+            {
+                LastErrorMessage = Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+                return false;
+            }
+
             if (columnNames == null || columnNames.Count == 0)
             {
                 LastErrorMessage = Constants.SyntaxError;
