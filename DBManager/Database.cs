@@ -62,6 +62,11 @@ namespace DbManager
             //return false and set LastErrorMessage with the appropriate error (Check Constants.cs)
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
+            if(!IsUserAdmin())
+            {
+                LastErrorMessage = Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+                return false;
+            }
 
             if (ColumnDefinition == null || ColumnDefinition.Count == 0)
             {
