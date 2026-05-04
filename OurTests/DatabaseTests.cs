@@ -1,4 +1,5 @@
 using DbManager;
+using DbManager.Security;
 
 namespace OurTests
 {
@@ -290,6 +291,23 @@ namespace OurTests
             File.WriteAllText("DoofenshmirtzSL" + ".txt", "A");
 
             Assert.Null(Database.Load("DoofenshmirtzSL", "admin", "admin"));
+        }
+
+        [Fact]
+        public void RegularQueriesNoPrivilege()
+        {
+            var database = Database.CreateTestDatabase();
+            var user = new User("client1", "userPassword");
+            var profile = new Profile { Name = "client" };
+
+            database.SecurityManager.AddProfile(profile);
+            profile.Users.Add(user);
+
+            database.Save("RegularQueriesNoPrivilegeTest");
+            database = Database.Load("RegularQueriesNoPrivilegeTest", "client1", "userPassword");
+
+            Assert.Null(database.Select("TestTable", ["Name", "Age", "Height"], null));
+            Assert.False(database.Insert("TestTable", ["Pepe", "51", "1.55"]));
         }
     }
 }
