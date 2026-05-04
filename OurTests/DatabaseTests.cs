@@ -308,6 +308,8 @@ namespace OurTests
 
             Assert.Null(database.Select("TestTable", ["Name", "Age", "Height"], null));
             Assert.False(database.Insert("TestTable", ["Pepe", "51", "1.55"]));
+            Assert.False(database.DeleteWhere("TestTable", null));
+            Assert.False(database.Update("TestTable", [new("Name", "Maider")], null));
         }
     }
 }
