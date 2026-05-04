@@ -117,6 +117,11 @@ namespace DbManager
         {
             //DEADLINE 1.B: Insert a new row to the table. If it doesn't exist return false and set LastErrorMessage appropriately
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
+            if (!SecurityManager.IsGrantedPrivilege(m_username, tableName, Privilege.Insert))
+            {
+                LastErrorMessage = Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+                return false;
+            }
 
             Table tablaEncontrada = null;
 
@@ -158,6 +163,13 @@ namespace DbManager
             //DEADLINE 1.B: Return the result of the select. If the table doesn't exist return null and set LastErrorMessage appropriately (Check Constants.cs)
             //If any of the requested columns doesn't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return the table
+
+            if (!SecurityManager.IsGrantedPrivilege(m_username, tableName, Privilege.Select))
+            {
+                LastErrorMessage = Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+                return null;
+            }
+
             Table tableC = TableByName(tableName);
 
             if (tableC == null)
