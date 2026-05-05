@@ -182,9 +182,9 @@ namespace OurTests
             Assert.False(database.DeleteWhere("TestTable", null));
 
             database.CheckForTesting("TestTable", [
-                ["Maider", "67", "1.67"],
-                ["Maider", "25", "1.65"],
-                ["Pepe", "51", "1.55"]
+                ["Maider", "1.67", "67"],
+                ["Pepe", "1.55", "51"],
+                ["Maider", "25", "1.65"]
             ]);
         }
 

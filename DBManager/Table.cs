@@ -288,14 +288,12 @@ namespace DbManager
             foreach (List<string> row in rows)
             {
                 if (GetRow(rowIndex).Values.Count != row.Count)
-                    if (rows.Count != NumRows())
-                        throw new Exception($"The {rowIndex}-th row has {GetRow(rowIndex).Values.Count} values and {row.Count} were expected");
+                    throw new Exception($"The {rowIndex}-th row has {GetRow(rowIndex).Values.Count} values and {row.Count} were expected");
 
                 for (int columnIndex = 0; columnIndex < row.Count; columnIndex++)
                 {
                     if (GetRow(rowIndex).Values[columnIndex] != row[columnIndex])
-                        if (rows.Count != NumRows())
-                            throw new Exception($"The [{rowIndex},{columnIndex}] element is {GetRow(rowIndex).Values[columnIndex]} instead of {row[columnIndex]}");
+                        throw new Exception($"The [{rowIndex},{columnIndex}] element is {GetRow(rowIndex).Values[columnIndex]} instead of {row[columnIndex]}");
                 }
 
                 rowIndex++;

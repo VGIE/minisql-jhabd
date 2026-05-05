@@ -210,5 +210,17 @@ namespace OurTests
             table.DeleteIthRow(-1);
             Assert.Equal(2, table.NumRows());
         }
+
+        [Fact]
+        public void CheckForTesting()
+        {
+            var tabla = Table.CreateTestTable();
+
+            tabla.CheckForTesting([["Rodolfo", "1.62", "25"], ["Maider", "1.67", "67"], ["Pepe", "1.55", "51"]]);
+
+            Assert.Throws<Exception>(() => tabla.CheckForTesting([]));
+            Assert.Throws<Exception>(() => tabla.CheckForTesting([["Walter"], ["Walter"], ["Walter"]]));
+            Assert.Throws<Exception>(() => tabla.CheckForTesting([["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"]]));
+        }
     }
 }
