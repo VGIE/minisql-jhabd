@@ -201,6 +201,14 @@ namespace OurTests
             Assert.False(database.Update("TestTable", [new("Name", "Maider")], null));
             Assert.False(database.Update("TestTable", null, new("Name", "=", "Maider")));
             Assert.False(database.Update("TestTable", [], new("Name", "=", "Maider")));
+
+            Assert.True(database.Update("TestTable", [new("Name", "")], new("Name", "=", "Eneko")));
+
+            database.CheckForTesting("TestTable", [
+                ["Maider", "1.62", "25"],
+                ["Maider", "1.67", "67"],
+                ["Pepe", "1.55", "51"]
+            ]);
         }
 
         [Fact]

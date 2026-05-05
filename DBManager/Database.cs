@@ -281,9 +281,14 @@ namespace DbManager
 
             var success = tableC.Update(columnNames, columnCondition);
 
-            LastErrorMessage = Constants.UpdateSuccess;
+            if (success)
+            {
+                LastErrorMessage = Constants.UpdateSuccess;
+                return success;
+            }
 
-            return success;
+            LastErrorMessage = Constants.SyntaxError;
+            return false;
         }
 
         public bool Save(string databaseName)
