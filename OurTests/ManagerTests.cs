@@ -54,5 +54,35 @@ namespace OurTests
 
             Assert.True(database.SecurityManager.IsGrantedPrivilege("client1", "TestTable", Privilege.Select));
         }
+
+        [Fact]
+        public void AddProfile()
+        {
+            var database = Database.CreateTestDatabase();
+            var profile = new Profile { Name = "client" };
+
+            database.SecurityManager.AddProfile(profile);
+
+            Assert.NotNull(database.SecurityManager.ProfileByName("client"));
+            Assert.Equal("client", database.SecurityManager.ProfileByName("client").Name);
+        }
+
+        [Fact]
+        public void RemoveProfile()
+        {
+            var database = Database.CreateTestDatabase();
+            var profile = new Profile { Name = "client" };
+
+            database.SecurityManager.AddProfile(profile);
+            Assert.NotNull(database.SecurityManager.ProfileByName("client"));
+
+            database.SecurityManager.RemoveProfile("client");
+            Assert.Null(database.SecurityManager.ProfileByName("client"));
+
+            Assert.False(database.SecurityManager.RemoveProfile("a"));
+
+            var man = new Manager("user");
+            Assert.False(man.RemoveProfile("client"));
+        }
     }
 }
