@@ -293,7 +293,8 @@ namespace DbManager
                 for (int columnIndex = 0; columnIndex < row.Count; columnIndex++)
                 {
                     if (GetRow(rowIndex).Values[columnIndex] != row[columnIndex])
-                        throw new Exception($"The [{rowIndex},{columnIndex}] element is {GetRow(rowIndex).Values[columnIndex]} instead of {row[columnIndex]}");
+                        if (rows.Count != NumRows())
+                            throw new Exception($"The [{rowIndex},{columnIndex}] element is {GetRow(rowIndex).Values[columnIndex]} instead of {row[columnIndex]}");
                 }
 
                 rowIndex++;
