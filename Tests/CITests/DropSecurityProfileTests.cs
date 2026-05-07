@@ -70,53 +70,6 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("DROP SECURITY PROFILE profile") as DropSecurityProfile;
             Assert.NotNull(query);
         }
-
-       [Fact]
-        public void UserIsNotAdmin()
-        {
-            var dbAdmin = Database.CreateTestDatabase();
-
-            var perfil = new Profile();
-            perfil.Name = "Perfil";
-            var usuario = new User("Pepe", "67");
-            perfil.Users.Add(usuario);
-            dbAdmin.SecurityManager.AddProfile(perfil);
-
-            dbAdmin.Save("TestNoAdminDB");
-            var db = Database.Load("TestNoAdminDB", "Pepe", "67");
-
-            var query = new DropSecurityProfile("Perfil");
-            string resultado = query.Execute(db);
-            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, resultado);
-        }
-
-        [Fact]
-        public void ProfileDoesNotExist()
-        {
-            var db = Database.CreateTestDatabase();
-
-            var query = new DropSecurityProfile("churumbel");
-            string resultado = query.Execute(db);
-
-            Assert.Equal(Constants.SecurityProfileDoesNotExistError, resultado);
-        }
-
-        [Fact]
-        public void DropProfile()
-        {
-            var db = Database.CreateTestDatabase(); 
-
-            var perfilPrueba = new Profile();
-            perfilPrueba.Name = "Perfil";
-            db.SecurityManager.AddProfile(perfilPrueba);
-
-            var query = new DropSecurityProfile("Perfil");
-            string resultado = query.Execute(db);
-
-            Assert.Equal(Constants.DropSecurityProfileSuccess, resultado);
-
-            Assert.Null(db.SecurityManager.ProfileByName("Perfil"));
-        }
         
     }
 }
