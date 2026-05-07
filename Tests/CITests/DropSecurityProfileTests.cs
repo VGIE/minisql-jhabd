@@ -89,6 +89,34 @@ namespace SecurityParsingTests
             string resultado = query.Execute(db);
             Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, resultado);
         }
+
+        [Fact]
+        public void ProfileDoesNotExist()
+        {
+            var db = Database.CreateTestDatabase();
+
+            var query = new DropSecurityProfile("churumbel");
+            string resultado = query.Execute(db);
+
+            Assert.Equal(Constants.SecurityProfileDoesNotExistError, resultado);
+        }
+
+        [Fact]
+        public void DropProfile()
+        {
+            var db = Database.CreateTestDatabase(); 
+
+            var perfilPrueba = new Profile();
+            perfilPrueba.Name = "Perfil";
+            db.SecurityManager.AddProfile(perfilPrueba);
+
+            var query = new DropSecurityProfile("Perfil");
+            string resultado = query.Execute(db);
+
+            Assert.Equal(Constants.DropSecurityProfileSuccess, resultado);
+
+            Assert.Null(db.SecurityManager.ProfileByName("Perfil"));
+        }
         
     }
 }
