@@ -43,7 +43,7 @@ namespace DbManager
             return Constants.ProfileAlreadyHasPrivilege;
         
             if(p.GrantPrivilege(TableName, a))
-            return Constants.CreateTableSuccess;
+            return Constants.GrantPrivilegeSuccess;
 
           
             return "";            
