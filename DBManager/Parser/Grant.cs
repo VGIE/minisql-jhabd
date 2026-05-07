@@ -26,7 +26,7 @@ namespace DbManager
             Security.Privilege a;
             Profile p = database.SecurityManager.ProfileByName(ProfileName);
             try { a = PrivilegeUtils.FromPrivilegeName(PrivilegeName);}
-            catch(ArgumentException ex)
+            catch(ArgumentException)
             {
                 return Constants.PrivilegeDoesNotExistError;
             }
