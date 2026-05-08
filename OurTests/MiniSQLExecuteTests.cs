@@ -287,6 +287,8 @@ namespace OurTests
             Assert.Equal(Constants.DropSecurityProfileSuccess, resultado);
 
             Assert.Null(db.SecurityManager.ProfileByName("Perfil"));
+
+            Assert.Equal(db.ExecuteMiniSQLQuery("DROP SECURITY PROFILE Perfil"), Constants.SecurityProfileDoesNotExistError);
         }
     }
 }
