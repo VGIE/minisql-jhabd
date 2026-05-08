@@ -23,6 +23,9 @@ namespace DbManager
         }
         public string Execute(Database database)
         {
+            if(!database.IsUserAdmin())
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
             Security.Privilege a;
             Profile p = database.SecurityManager.ProfileByName(ProfileName);
             try { a = PrivilegeUtils.FromPrivilegeName(PrivilegeName);}
@@ -32,8 +35,6 @@ namespace DbManager
             }
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, RevokePrivilegeSuccess, 
-            if(!database.IsUserAdmin())
-            return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
 
             if(database.SecurityManager.ProfileByName(ProfileName) == null)
             return Constants.SecurityProfileDoesNotExistError;
