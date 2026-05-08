@@ -84,5 +84,40 @@ namespace OurTests
             var man = new Manager("user");
             Assert.False(man.RemoveProfile("client"));
         }
+
+        [Fact]
+        public void GrantRevokePrivilege()
+        {
+            var database = Database.CreateTestDatabase();
+            var profile = new Profile { Name = "client" };
+            var user = new User("client1", "userPassword");
+            profile.Users.Add(user);
+
+            database.SecurityManager.AddProfile(profile);
+
+            database.SecurityManager.GrantPrivilege("client", "TestTable", Privilege.Select);
+            database.SecurityManager.GrantPrivilege("client", "TestTable", Privilege.Insert);
+            database.SecurityManager.RevokePrivilege("client", "TestTable", Privilege.Insert);
+
+            Assert.True(profile.IsGrantedPrivilege("TestTable", Privilege.Select));
+
+            database.SecurityManager.GrantPrivilege(null, "TestTable", Privilege.Insert);
+            database.SecurityManager.RevokePrivilege(null, "TestTable", Privilege.Insert);
+
+            database.Save("GrantPrivilegeTest");
+            database = Database.Load("GrantPrivilegeTest", "client1", "userPassword");
+
+            database.SecurityManager.GrantPrivilege("client", "TestTable", Privilege.Insert);
+            Assert.False(profile.IsGrantedPrivilege("TestTable", Privilege.Insert));
+
+            database.SecurityManager.RevokePrivilege("client", "TestTable", Privilege.Select);
+            Assert.True(profile.IsGrantedPrivilege("TestTable", Privilege.Select));
+        }
+
+        [Fact]
+        public void LoadException()
+        {
+            Assert.NotNull(Manager.Load("!·$%&/()=?¿.n@|#~€¬{[]}---̣̣_<>Ç", null));
+        }
     }
 }
