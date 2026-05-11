@@ -43,11 +43,8 @@ namespace DbManager
             if(p.IsGrantedPrivilege( TableName, a))
             return Constants.ProfileAlreadyHasPrivilege;
         
-            if(p.GrantPrivilege(TableName, a))
+            database.SecurityManager.GrantPrivilege(ProfileName, TableName, a);
             return Constants.GrantPrivilegeSuccess;
-
-          
-            return "";            
         }
 
     }

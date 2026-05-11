@@ -109,6 +109,7 @@ namespace OurTests
             database.SecurityManager.GrantPrivilege("client", "TestTable", Privilege.Select);
             database.SecurityManager.GrantPrivilege("client", "TestTable", Privilege.Insert);
             database.SecurityManager.RevokePrivilege("client", "TestTable", Privilege.Insert);
+            database.SecurityManager.GrantPrivilege("client", null, Privilege.Update);
 
             Assert.True(profile.IsGrantedPrivilege("TestTable", Privilege.Select));
             Assert.False(database.SecurityManager.IsGrantedPrivilege("client1", null, Privilege.Insert));

@@ -290,5 +290,56 @@ namespace OurTests
 
             Assert.Equal(db.ExecuteMiniSQLQuery("DROP SECURITY PROFILE Perfil"), Constants.SecurityProfileDoesNotExistError);
         }
+
+        [Fact]
+        public void GrantPrivilege()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.Equal(Constants.SecurityProfileDoesNotExistError, database.ExecuteMiniSQLQuery("GRANT UPDATE ON TestTable TO Profile"));
+
+            var userProfile = new Profile() { Name = "Profile" };
+            var user = new User("Client", "Password");
+            userProfile.Users.Add(user);
+            database.SecurityManager.AddProfile(userProfile);
+
+            var query = new Grant("ASJCNASKJc", "TestTable", "Profile");
+            Assert.Equal(Constants.PrivilegeDoesNotExistError, query.Execute(database));
+
+
+            Assert.Equal(Constants.GrantPrivilegeSuccess, database.ExecuteMiniSQLQuery("GRANT UPDATE ON TestTable TO Profile"));
+            Assert.Equal(Constants.ProfileAlreadyHasPrivilege, database.ExecuteMiniSQLQuery("GRANT UPDATE ON TestTable TO Profile"));
+
+            database.Save("GrantPrivilegeSecTest");
+            database = Database.Load("GrantPrivilegeSecTest", "Client", "Password");
+
+            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, database.ExecuteMiniSQLQuery("GRANT SELECT ON TestTable TO Profile"));
+        }
+
+        [Fact]
+        public void RevokePrivilege()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.Equal(Constants.SecurityProfileDoesNotExistError, database.ExecuteMiniSQLQuery("REVOKE UPDATE ON TestTable TO Profile"));
+
+            var userProfile = new Profile() { Name = "Profile" };
+            var user = new User("Client", "Password");
+            userProfile.Users.Add(user);
+            database.SecurityManager.AddProfile(userProfile);
+
+            var query = new Revoke("ASJCNASKJc", "TestTable", "Profile");
+            Assert.Equal(Constants.PrivilegeDoesNotExistError, query.Execute(database));
+
+
+            database.ExecuteMiniSQLQuery("GRANT UPDATE ON TestTable TO Profile");
+
+            Assert.Equal(Constants.RevokePrivilegeSuccess, database.ExecuteMiniSQLQuery("REVOKE UPDATE ON TestTable TO Profile"));
+
+            database.Save("RevokePrivilegeSecTest");
+            database = Database.Load("RevokePrivilegeSecTest", "Client", "Password");
+
+            Assert.Equal(Constants.UsersProfileIsNotGrantedRequiredPrivilege, database.ExecuteMiniSQLQuery("REVOKE SELECT ON TestTable TO Profile"));
+        }
     }
 }
