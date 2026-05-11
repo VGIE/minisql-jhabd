@@ -85,7 +85,18 @@ namespace DbManager.Network
         public void Close()
         {
             //DEADLINE 6: Send a Close command to the server using SendString and close the connection to the server
-            
+
+            try
+            {
+                string xmlCommand = XmlSerializer.CloseConnection;
+                SendString(xmlCommand);
+
+                m_tcpClient.Close();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
