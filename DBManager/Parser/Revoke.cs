@@ -39,7 +39,7 @@ namespace DbManager
             if(database.SecurityManager.ProfileByName(ProfileName) == null)
             return Constants.SecurityProfileDoesNotExistError;
 
-            database.SecurityManager.GrantPrivilege(ProfileName, TableName, a);
+            database.SecurityManager.RevokePrivilege(ProfileName, TableName, a);
             return Constants.RevokePrivilegeSuccess;
             
         }
