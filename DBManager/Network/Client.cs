@@ -58,11 +58,11 @@ namespace DbManager.Network
 
         public bool Open(string database, string username, string password, out string error)
         {
-            //DEADLINE 6: Send an Open command to the server using SendString
+             string xmlCommand = XmlSerializer.OpenDatabase(database, username, password);
             
-            error = null;
-            return false;
+            string answer = SendString(xmlCommand);
             
+            return XmlDeserializer.ParseOpenCreateAnswer(answer, out error);
         }
 
         public bool Create(string database, string username, string password, out string error)
