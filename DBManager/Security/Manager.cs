@@ -37,6 +37,10 @@ namespace DbManager.Security
         public bool IsPasswordCorrect(string username, string password)
         {
             //TODO DEADLINE 5: Return true if the user's password is correct. The given password should be encrypted before comparing with the saved one
+            if (password == null)
+            {
+                return false;
+            }
 
             if (username != null)
             {
@@ -61,6 +65,7 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Add this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
+            if (table == null) return;
             if (!IsUserAdmin()) return;
             Profile profile = ProfileByName(profileName);
             if (profile == null) return;

@@ -30,6 +30,7 @@ namespace OurTests
             Assert.True(database.SecurityManager.IsPasswordCorrect("admin", "adminPassword"));    // Default checks
             Assert.False(database.SecurityManager.IsPasswordCorrect("admin", "a"));
             Assert.False(database.SecurityManager.IsPasswordCorrect(null, "adminPassword"));
+            Assert.False(database.SecurityManager.IsPasswordCorrect("admin", null));
         }
 
         [Fact]
@@ -110,6 +111,7 @@ namespace OurTests
             database.SecurityManager.RevokePrivilege("client", "TestTable", Privilege.Insert);
 
             Assert.True(profile.IsGrantedPrivilege("TestTable", Privilege.Select));
+            Assert.False(database.SecurityManager.IsGrantedPrivilege("client1", null, Privilege.Insert));
 
             database.SecurityManager.GrantPrivilege(null, "TestTable", Privilege.Insert);
             database.SecurityManager.RevokePrivilege(null, "TestTable", Privilege.Insert);
