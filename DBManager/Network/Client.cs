@@ -58,6 +58,7 @@ namespace DbManager.Network
 
         public bool Open(string database, string username, string password, out string error)
         {
+            //DEADLINE 6: Send an Open command to the server using SendString
              string xmlCommand = XmlSerializer.OpenDatabase(database, username, password);
             
             string answer = SendString(xmlCommand);
@@ -67,6 +68,7 @@ namespace DbManager.Network
 
         public bool Create(string database, string username, string password, out string error)
         {
+            //DEADLINE 6: Send a Create command to the server using SendString
         string xmlCommand = XmlSerializer.CreateDatabase(database, username, password);
         string answer = SendString(xmlCommand);
             
@@ -75,6 +77,7 @@ namespace DbManager.Network
 
         public string SendQuery(string query)
         {
+            //DEADLINE 6: Send a Query command to the server using SendString
             string xmlCommand = XmlSerializer.Query(query);
             
             string answer = SendString(xmlCommand);
