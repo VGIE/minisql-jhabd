@@ -21,8 +21,15 @@ namespace DbManager.Network
             //DEADLINE 6: Connect the tcp client to the given ip/port
             //Return false if something goes wrong, true otherwise (try/catch)
             
-            return false;
-            
+            try
+            {
+                m_tcpClient.Connect(ipAddress, port);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private string SendString(string message)
