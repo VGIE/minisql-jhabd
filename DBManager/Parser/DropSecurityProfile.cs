@@ -19,15 +19,12 @@ namespace DbManager
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, DropSecurityProfileSuccess
+            if (!database.IsUserAdmin())
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
 
             if (database.SecurityManager.ProfileByName(ProfileName) == null)
             {
                 return Constants.SecurityProfileDoesNotExistError;
-            }
-
-            if (!database.IsUserAdmin())
-            {
-                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
             }
 
             database.SecurityManager.RemoveProfile(ProfileName);

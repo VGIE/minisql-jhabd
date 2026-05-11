@@ -24,11 +24,11 @@ namespace DbManager
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, SecurityProfileDoesNotExistError, AddUserSuccess
-            if (database.SecurityManager.ProfileByName(ProfileName) == null)
-                return Constants.SecurityProfileDoesNotExistError;
-
             if(!database.IsUserAdmin())
                 return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
+            if (database.SecurityManager.ProfileByName(ProfileName) == null)
+                return Constants.SecurityProfileDoesNotExistError;
 
             database.SecurityManager.ProfileByName(ProfileName).Users.Add(new (Username, Password));
 
