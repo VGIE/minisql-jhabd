@@ -67,11 +67,10 @@ namespace DbManager.Network
 
         public bool Create(string database, string username, string password, out string error)
         {
-            //DEADLINE 6: Send a Create command to the server using SendString
+        string xmlCommand = XmlSerializer.CreateDatabase(database, username, password);
+        string answer = SendString(xmlCommand);
             
-            error = null;
-            return false;
-            
+            return XmlDeserializer.ParseOpenCreateAnswer(answer, out error);
         }
 
         public string SendQuery(string query)
