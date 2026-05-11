@@ -29,7 +29,7 @@ namespace DbManager
             Security.Privilege a;
             Profile p = database.SecurityManager.ProfileByName(ProfileName);
             try { a = PrivilegeUtils.FromPrivilegeName(PrivilegeName);}
-            catch(ArgumentException)
+            catch(Exception)
             {
                 return Constants.PrivilegeDoesNotExistError;
             }
