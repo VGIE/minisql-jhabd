@@ -23,6 +23,16 @@ namespace OurTests
         }
 
         [Fact]
+        public void IsPasswordCorrect()
+        {
+            var database = Database.CreateTestDatabase();
+
+            Assert.True(database.SecurityManager.IsPasswordCorrect("admin", "adminPassword"));    // Default checks
+            Assert.False(database.SecurityManager.IsPasswordCorrect("admin", "a"));
+            Assert.False(database.SecurityManager.IsPasswordCorrect(null, "adminPassword"));
+        }
+
+        [Fact]
         public void PrivilegeTests()
         {
             var database = Database.CreateTestDatabase();
@@ -118,6 +128,10 @@ namespace OurTests
         public void LoadException()
         {
             Assert.NotNull(Manager.Load("!·$%&/()=?¿.n@|#~€¬{[]}---̣̣_<>Ç", null));
+
+            File.WriteAllText("ManagerLoadExceptionTest_Security.txt", "NO_ES_UN_NUMERO");
+
+            Assert.Null(Manager.Load("ManagerLoadExceptionTest", null));
         }
     }
 }
