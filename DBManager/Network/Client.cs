@@ -21,8 +21,15 @@ namespace DbManager.Network
             //DEADLINE 6: Connect the tcp client to the given ip/port
             //Return false if something goes wrong, true otherwise (try/catch)
             
-            return false;
-            
+            try
+            {
+                m_tcpClient.Connect(ipAddress, port);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private string SendString(string message)
@@ -31,41 +38,67 @@ namespace DbManager.Network
             //Here, we do not do any Xml formatting, we just send the string as it comes and return the string as it comes
             //This private method should be used from Open/SendQuery/Close
             //Have a look at the project ClientConsole to see how we can use the TcpClient class
-            
-            return null;
-            
+
+            try
+            {
+                NetworkStream stream = m_tcpClient.GetStream();
+
+                byte[] dataToSend = Encoding.UTF8.GetBytes(message);
+                stream.Write(dataToSend, 0, dataToSend.Length);
+
+                byte[] receivedData = new byte[4096];
+                int bytesRead = stream.Read(receivedData, 0, receivedData.Length);
+                return Encoding.UTF8.GetString(receivedData, 0, bytesRead);
+            }
+            catch (Exception)
+            {
+                return Constants.Error + "Connection lost or failed.";
+            }
         }
 
         public bool Open(string database, string username, string password, out string error)
         {
-            //DEADLINE 6: Send an Open command to the server using SendString
+             string xmlCommand = XmlSerializer.OpenDatabase(database, username, password);
             
-            error = null;
-            return false;
+            string answer = SendString(xmlCommand);
             
+            return XmlDeserializer.ParseOpenCreateAnswer(answer, out error);
         }
 
         public bool Create(string database, string username, string password, out string error)
         {
-            //DEADLINE 6: Send a Create command to the server using SendString
+        string xmlCommand = XmlSerializer.CreateDatabase(database, username, password);
+        string answer = SendString(xmlCommand);
             
-            error = null;
-            return false;
-            
+            return XmlDeserializer.ParseOpenCreateAnswer(answer, out error);
         }
 
         public string SendQuery(string query)
         {
-            //DEADLINE 6: Send a Query command to the server using SendString
+            string xmlCommand = XmlSerializer.Query(query);
             
-            return null;
+            string answer = SendString(xmlCommand);
             
+            XmlDeserializer.ParseQueryAnswer(answer, out string answerContent);
+            
+            return answerContent;            
         }
 
         public void Close()
         {
             //DEADLINE 6: Send a Close command to the server using SendString and close the connection to the server
-            
+
+            try
+            {
+                string xmlCommand = XmlSerializer.CloseConnection;
+                SendString(xmlCommand);
+
+                m_tcpClient.Close();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
