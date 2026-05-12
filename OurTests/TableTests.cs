@@ -221,6 +221,7 @@ namespace OurTests
             Assert.Throws<Exception>(() => tabla.CheckForTesting([]));
             Assert.Throws<Exception>(() => tabla.CheckForTesting([["Walter"], ["Walter"], ["Walter"]]));
             //Assert.Throws<Exception>(() => tabla.CheckForTesting([["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"]]));
+            tabla.CheckForTesting([["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"], ["Walter", "Walter", "Walter"]]);
         }
     }
 }
