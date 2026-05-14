@@ -25,11 +25,11 @@ namespace DbManager.Network
 
                 server.Start();
 
-                Console.WriteLine("Server running and listening on port " + port);
+                //Console.WriteLine("Server running and listening on port " + port);
 
                 socket = server.AcceptSocket();
 
-                Console.WriteLine("Connection accepted from " + socket.RemoteEndPoint);
+                //Console.WriteLine("Connection accepted from " + socket.RemoteEndPoint);
 
                 bool connected = true;
 
@@ -40,7 +40,7 @@ namespace DbManager.Network
                     buffer[bytesRead] = 0;
                     ASCIIEncoding encoding = new ASCIIEncoding();
                     string clientMessage = encoding.GetString(buffer).Substring(0,bytesRead);
-                    Console.WriteLine("Message received from client: " + clientMessage);
+                    //Console.WriteLine("Message received from client: " + clientMessage);
 
                     string response = "";
 
@@ -102,7 +102,7 @@ namespace DbManager.Network
 
             catch (Exception e)
             {
-                Console.WriteLine("Unhandled error: " + e);
+                //Console.WriteLine("Unhandled error: " + e);
             }
 
             finally
@@ -110,7 +110,7 @@ namespace DbManager.Network
                 socket?.Close();
                 server?.Stop();
 
-                Console.WriteLine("Server closed. Press any key to finish...");
+                //Console.WriteLine("Server closed. Press any key to finish...");
                 Console.ReadKey();
             }
         }
